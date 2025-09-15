@@ -1,6 +1,6 @@
 // Premium Services Screen - Life Changing Journey
 import React, { useState } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, FlatList, Linking, Alert } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -32,10 +32,7 @@ const ServicesScreen = ({ navigation }) => {
         borderRadius: 20,
         backgroundColor: isSelected ? Colors.primary : Colors.surface,
         marginRight: 8,
-        shadowColor: Colors.shadow.light,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
+        boxShadow: '0 2px 4px rgba(1, 38, 48, 0.05)',
         elevation: 2,
         borderWidth: 1,
         borderColor: isSelected ? Colors.primary : Colors.lightGray,
@@ -66,10 +63,7 @@ const ServicesScreen = ({ navigation }) => {
       borderRadius: 20,
       margin: 16,
       padding: 20,
-      shadowColor: Colors.shadow.strong,
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.15,
-      shadowRadius: 16,
+      boxShadow: '0 8px 16px rgba(1, 38, 48, 0.15)',
       elevation: 10,
     }}>
       {/* Practitioner Info */}
@@ -199,9 +193,18 @@ const ServicesScreen = ({ navigation }) => {
               service={service}
               variant="large"
               onPress={(service, action) => {
-                if (action === 'book') {
-                  navigation.navigate('Booking', { service })
+                if (action === 'website' && service.website) {
+                  // Open website in browser
+                  Linking.openURL(service.website).catch(() => {
+                    Alert.alert('Error', 'Unable to open website. Please check your internet connection.')
+                  })
+                } else if (action === 'call' && service.phone) {
+                  // Open phone dialer
+                  Linking.openURL(`tel:${service.phone}`).catch(() => {
+                    Alert.alert('Error', 'Unable to make call. Please check your device settings.')
+                  })
                 } else {
+                  // Navigate to service detail screen
                   navigation.navigate('ServiceDetail', { service })
                 }
               }}
@@ -218,10 +221,7 @@ const ServicesScreen = ({ navigation }) => {
           borderRadius: 20,
           overflow: 'hidden',
           marginTop: 24,
-          shadowColor: Colors.shadow.medium,
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
+          boxShadow: '0 4px 12px rgba(1, 38, 48, 0.1)',
           elevation: 5,
         }}>
           <LinearGradient

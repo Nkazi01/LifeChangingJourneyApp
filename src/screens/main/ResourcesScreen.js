@@ -212,25 +212,25 @@ const ResourcesScreen = ({ navigation }) => {
           icon="play-circle" 
           count="45" 
           label="Videos" 
-          color={Colors.wellness.mentalWellness} 
+          color={Colors.mentalWellness.primary} 
         />
         <StatsCard 
           icon="headset" 
           count="32" 
           label="Audio" 
-          color={Colors.wellness.spiritualGrowth} 
+          color={Colors.spiritualGrowth.primary} 
         />
         <StatsCard 
           icon="document-text" 
           count="78" 
           label="Articles" 
-          color={Colors.wellness.financialGuidance} 
+          color={Colors.financialGuidance.primary} 
         />
         <StatsCard 
           icon="download" 
           count="24" 
           label="Guides" 
-          color={Colors.wellness.hypnotherapy} 
+          color={Colors.hypnotherapy.primary} 
         />
       </View>
 

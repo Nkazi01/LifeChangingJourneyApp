@@ -1,27 +1,30 @@
 // Static data for Life Changing Journey - Real services and content
 export const staticData = {
-  // Real services from Life Changing Journey website
+  // Real services from Life Changing Journey ecosystem
   services: [
     {
       id: 1,
       title: 'Psychology Services',
       shortDescription: 'Professional psychological support & therapy',
-      description: 'Comprehensive mental health support with qualified psychologists. Individual counseling, therapy sessions, and psychological assessments to support your mental wellness journey.',
+      description: 'Comprehensive mental health support with Vuyani Nyezi, a counselling psychologist with 12+ years of experience. Individual counseling, therapy sessions, and psychological assessments to support your mental wellness journey.',
       category: 'mental_wellness',
       icon: 'medical-outline',
-      price: 800,
-      duration: 60,
       features: [
         'Individual Therapy Sessions',
         'Psychological Assessments', 
         'Stress & Anxiety Management',
         'Depression Support',
         'Trauma Counseling',
-        'Relationship Counseling'
+        'African Psychology Integration',
+        'Indigenous Knowledge Systems',
+        'Cultural Aspects of Counseling'
       ],
       isActive: true,
-      practitioner: 'Senior Psychologist',
-      practitionerTitle: 'Registered Clinical Psychologist'
+      practitioner: 'Vuyani Nyezi',
+      practitionerTitle: 'Counselling Psychologist',
+      website: 'https://psychologistdurban.co.za',
+      phone: '+27672803432',
+      office: '+27310350208'
     },
     {
       id: 2,
@@ -30,8 +33,6 @@ export const staticData = {
       description: 'Traditional African spiritual interventions (izinkinga zemimoya) including spiritual cleansing, guidance, and Ubuntu-based healing practices rooted in our cultural heritage.',
       category: 'spiritual_growth',
       icon: 'leaf-outline',
-      price: 500,
-      duration: 45,
       features: [
         'Ukugezwa Kwemimoya (Spiritual Cleansing)',
         'Traditional Healing Ceremonies',
@@ -41,29 +42,33 @@ export const staticData = {
         'Cultural Heritage Healing'
       ],
       isActive: true,
-      practitioner: 'Traditional Healer',
-      practitionerTitle: 'Qualified Spiritual Practitioner'
+      practitioner: 'Life Changing Journey',
+      practitionerTitle: 'Traditional Spiritual Practitioner',
+      website: 'https://lifechangingjourney.co.za',
+      phone: '+27310350208'
     },
     {
       id: 3,
-      title: 'Financial Services',
-      shortDescription: 'Personal loans & financial planning',
-      description: 'Comprehensive financial services including personal loans up to R10,000, financial planning, and money management guidance to secure your financial future.',
+      title: 'Tshabalala Omhle Financial Group',
+      shortDescription: 'Comprehensive financial solutions & loans',
+      description: 'Your trusted partner in achieving financial success and stability. A proudly Black-owned enterprise in Durban, South Africa, providing accessible, transparent, and effective financial solutions with NCR registration (NCRCP20083).',
       category: 'financial_guidance',
       icon: 'card-outline',
-      price: 350,
-      duration: 90,
       features: [
-        'Personal Loans up to R10,000',
-        'Quick Application Process',
-        'Financial Planning Consultation',
-        'Debt Management Solutions',
-        'Credit Assessment & Advice',
-        'Money Management Training'
+        'Soft Loans - Quick, accessible funding',
+        'Personal Loans - Competitive rates',
+        'Business Financing for SMEs',
+        'Debt Consolidation Services',
+        'Credit Counseling & Guidance',
+        'NCR Registered (NCRCP20083)',
+        'Black-owned & Community-focused',
+        'Ethical Lending Practices'
       ],
       isActive: true,
-      practitioner: 'Tshabalala Finance',
-      practitionerTitle: 'Licensed Credit Provider'
+      practitioner: 'Tshabalala Omhle Financial Group',
+      practitionerTitle: 'NCR Registered Credit Provider',
+      website: 'https://tshabalalafinance.co.za',
+      phone: '+27693084723'
     },
     {
       id: 4,
@@ -72,8 +77,6 @@ export const staticData = {
       description: 'Professional hypnotherapy sessions and life coaching to overcome limiting beliefs, break bad habits, and unlock your full potential for personal transformation.',
       category: 'hypnotherapy',
       icon: 'eye-outline',
-      price: 600,
-      duration: 75,
       features: [
         'Clinical Hypnotherapy Sessions',
         'Life Coaching & Goal Setting',
@@ -83,29 +86,59 @@ export const staticData = {
         'Personal Transformation Plans'
       ],
       isActive: true,
-      practitioner: 'Certified Life Coach',
-      practitionerTitle: 'Clinical Hypnotherapist'
+      practitioner: 'Life Changing Journey',
+      practitionerTitle: 'Clinical Hypnotherapist & Life Coach',
+      website: 'https://lifechangingjourney.co.za',
+      phone: '+27310350208'
     },
     {
       id: 5,
       title: 'Tshabalala Omkhulu Consulting',
-      shortDescription: 'Traditional wisdom & modern consulting',
-      description: 'Unique blend of traditional African wisdom and modern consulting approaches for personal development, business guidance, and life direction.',
-      category: 'spiritual_growth',
+      shortDescription: 'Integrated services & professional registrations',
+      description: 'Comprehensive integrated services including professional registrations, business consulting, and one-stop service solutions. From fingerprint clearance to gambling licenses, we handle all your professional registration needs.',
+      category: 'consulting',
       icon: 'library-outline',
-      price: 750,
-      duration: 60,
       features: [
+        'Fingerprints Criminal Clearance',
+        'Pre/Post Employment Screening',
+        'SACE Registration & Renewal',
+        'PSIRA Registrations',
+        'UBER/Bolt/InDrive Registration',
+        'SAIT Registration or Renewal',
+        'NCR Registrations',
+        'PDP Applications',
+        'Gambling License Applications',
         'Traditional Wisdom Consultation',
-        'Business & Career Guidance',
-        'Life Purpose Discovery',
-        'Cultural Heritage Integration',
-        'Personal Development Planning',
-        'Leadership Development'
+        'Business & Career Guidance'
       ],
       isActive: true,
       practitioner: 'Tshabalala Omkhulu',
-      practitionerTitle: 'Traditional Consultant & Advisor'
+      practitionerTitle: 'Integrated Services Consultant',
+      website: 'https://tshabalalaomkhulu.co.za',
+      phone: '+27693084723'
+    },
+    {
+      id: 6,
+      title: 'Nyezi Vuyani Foundation',
+      shortDescription: 'Educational support & rural community development',
+      description: 'Non-profit organization driven by a passion for education and deep commitment to rural communities. Bridging the educational gap between urban and rural areas by providing financial assistance, mentorship, and career guidance to learners from disadvantaged backgrounds.',
+      category: 'education',
+      icon: 'school-outline',
+      features: [
+        'Educational Support for Rural Communities',
+        'Financial Assistance for Learners',
+        'High School to University Support',
+        'Mentorship & Career Guidance',
+        'Personal Development Opportunities',
+        'Community Development Programs',
+        'Bridging Urban-Rural Educational Gaps',
+        'Empowering Rural Youth'
+      ],
+      isActive: true,
+      practitioner: 'Nyezi Vuyani Foundation',
+      practitionerTitle: 'Non-Profit Educational Organization',
+      website: 'https://www.nyezivfoundation.co.za/',
+      phone: '+27740674650'
     }
   ],
 
@@ -132,7 +165,7 @@ export const staticData = {
     {
       id: 3,
       client_name: 'Nomsa K.',
-      content: 'Thanks to their financial services, I was able to get the loan I needed quickly and start my business. The support and guidance have been invaluable.',
+      content: 'Thanks to Tshabalala Finance, I was able to get the loan I needed quickly and start my business. The support and guidance have been invaluable.',
       rating: 5,
       service_category: 'financial_guidance',
       is_featured: true,
@@ -150,9 +183,18 @@ export const staticData = {
     {
       id: 5,
       client_name: 'Zanele P.',
-      content: 'Tshabalala Omkhulu\'s wisdom combined with practical guidance helped me make important life decisions. The cultural connection was deeply meaningful.',
+      content: 'Tshabalala Omkhulu\'s integrated services helped me with all my professional registrations. Their one-stop approach saved me so much time and stress.',
       rating: 5,
       service_category: 'consulting',
+      is_featured: true,
+      is_approved: true
+    },
+    {
+      id: 6,
+      client_name: 'Sipho M.',
+      content: 'The Nyezi Foundation provided me with the educational support I needed to pursue my dreams. Their mentorship program changed my life completely.',
+      rating: 5,
+      service_category: 'education',
       is_featured: true,
       is_approved: true
     }
@@ -300,34 +342,48 @@ export const staticData = {
     }
   ],
 
-  // Quick actions for Life Changing Journey services
+  // Quick actions for Life Changing Journey services (directory gateway mode)
   quickActions: [
     {
       id: 1,
-      title: 'Book Session',
-      icon: 'calendar-outline',
+      title: 'Psychology Services',
+      icon: 'medical-outline',
       color: '#1a365d',
-      route: 'Booking'
+      route: 'MentalWellness'
     },
     {
       id: 2,
-      title: 'Resources',
-      icon: 'library-outline',
-      color: '#f6ad55',
-      route: 'Resources'
-    },
-    {
-      id: 3,
-      title: 'Apply for Loan',
+      title: 'Financial Services',
       icon: 'card-outline',
       color: '#38b2ac',
       route: 'FinancialGuidance'
     },
     {
+      id: 3,
+      title: 'Spiritual Growth',
+      icon: 'leaf-outline',
+      color: '#f6ad55',
+      route: 'SpiritualGrowth'
+    },
+    {
       id: 4,
+      title: 'Hypnotherapy',
+      icon: 'eye-outline',
+      color: '#6b46c1',
+      route: 'Hypnotherapy'
+    },
+    {
+      id: 5,
+      title: 'Integrated Services',
+      icon: 'library-outline',
+      color: '#e53e3e',
+      route: 'IntegratedServices'
+    },
+    {
+      id: 6,
       title: 'Contact Us',
       icon: 'call-outline',
-      color: '#6b46c1',
+      color: '#805ad5',
       route: 'Contact'
     }
   ]

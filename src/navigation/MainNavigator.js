@@ -9,6 +9,7 @@ import MentalWellnessScreen from '../screens/services/MentalWellnessScreen'
 import SpiritualGrowthScreen from '../screens/services/SpiritualGrowthScreen'
 import FinancialGuidanceScreen from '../screens/services/FinancialGuidanceScreen'
 import HypnotherapyScreen from '../screens/services/HypnotherapyScreen'
+import IntegratedServicesScreen from '../screens/services/IntegratedServicesScreen'
 
 const Stack = createStackNavigator()
 
@@ -75,6 +76,14 @@ const MainNavigator = () => {
         options={{
           headerShown: true,
           title: 'Hypnotherapy',
+        }}
+      />
+      <Stack.Screen 
+        name="IntegratedServices" 
+        component={IntegratedServicesScreen}
+        options={{
+          headerShown: true,
+          title: 'Integrated Services',
         }}
       />
     </Stack.Navigator>

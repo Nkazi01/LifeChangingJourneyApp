@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
 import { staticData } from '../utils/staticData';
-import { useNetworkStatus } from '../utils/networkUtils';
 
 // Create context
 const DataContext = createContext({
@@ -23,20 +22,17 @@ export const DataProvider = ({ children }) => {
   const [resources, setResources] = useState(staticData.resources);
   const [appointments, setAppointments] = useState([]);
   const [demoMode, setDemoMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // Get network status
-  const { isConnected } = useNetworkStatus();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load data from Supabase or use static data if offline
   const loadData = async () => {
-    if (!isConnected) {
-      console.log('Offline mode: using static data');
-      setDemoMode(true);
-      setIsLoading(false);
-      return;
-    }
-
+    // For directory gateway mode, always use static data
+    console.log('Directory gateway mode: using static data');
+    setDemoMode(true);
+    setIsLoading(false);
+    
+    // Future: Enable this when backend is ready
+    /*
     setIsLoading(true);
     try {
       // Load services
@@ -82,11 +78,12 @@ export const DataProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
+    */
   };
 
   // Load user appointments if authenticated
   const loadUserAppointments = async (userId) => {
-    if (!isConnected || !userId || userId === 'guest') return;
+    if (!userId || userId === 'guest') return;
     
     try {
       const { data, error } = await supabase
@@ -108,7 +105,7 @@ export const DataProvider = ({ children }) => {
   // Initial data load
   useEffect(() => {
     loadData();
-  }, [isConnected]);
+  }, []);
 
   // Context value
   const value = {

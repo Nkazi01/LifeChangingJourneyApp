@@ -76,13 +76,16 @@ const TabNavigator = () => {
           title: 'Services',
         }}
       />
-      <Tab.Screen 
-        name="Booking" 
-        component={BookingScreen}
-        options={{
-          title: 'Booking',
-        }}
-      />
+      {/* Booking tab hidden for directory gateway mode */}
+      {false && (
+        <Tab.Screen 
+          name="Booking" 
+          component={BookingScreen}
+          options={{
+            title: 'Booking',
+          }}
+        />
+      )}
       <Tab.Screen 
         name="Resources" 
         component={ResourcesScreen}
@@ -90,13 +93,16 @@ const TabNavigator = () => {
           title: 'Resources',
         }}
       />
-      <Tab.Screen 
-        name="Donate" 
-        component={DonationScreen}
-        options={{
-          title: 'Donate',
-        }}
-      />
+      {/* Donate tab hidden for directory gateway mode */}
+      {false && (
+        <Tab.Screen 
+          name="Donate" 
+          component={DonationScreen}
+          options={{
+            title: 'Donate',
+          }}
+        />
+      )}
     </Tab.Navigator>
   )
 }

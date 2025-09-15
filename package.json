@@ -7,7 +7,7 @@
     "start": "expo start --offline",
     "start:online": "expo start",
     "start:tunnel": "expo start --tunnel",
-    "start:lan": "expo start --lan", 
+    "start:lan": "expo start --lan",
     "start:offline": "expo start --offline",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -28,7 +28,7 @@
     "expo-av": "^15.1.7",
     "expo-linear-gradient": "^14.1.5",
     "expo-notifications": "^0.31.4",
-    "expo-splash-screen": "^31.0.8",
+    "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-native": "0.79.5",
@@ -36,7 +36,12 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "react-native-webview": "13.13.5"
+    "react-native-webview": "13.13.5",
+    "react-dom": "19.0.0",
+    "react-native-web": "~0.20.0",
+    "@expo/metro-runtime": "~5.0.4",
+    "@expo/vector-icons": "^14.0.2",
+    "expo-asset": "~11.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

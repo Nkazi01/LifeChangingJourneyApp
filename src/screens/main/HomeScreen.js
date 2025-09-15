@@ -7,7 +7,9 @@ import {
   TouchableOpacity, 
   Dimensions,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  Linking,
+  Alert
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
@@ -36,12 +38,17 @@ const HomeScreen = ({ navigation }) => {
   }, [])
 
   const loadUserProfile = async () => {
+    // Skip profile loading for directory gateway mode
     try {
+      setLoading(false)
+      // Future: Enable this when booking system is implemented
+      /*
       setLoading(true)
       const { data } = await getUserProfile()
       if (data) {
         setUserProfile(data)
       }
+      */
     } catch (error) {
       console.log('Error loading profile:', error)
     } finally {
@@ -110,6 +117,7 @@ const HomeScreen = ({ navigation }) => {
     </TouchableOpacity>
   )
 
+  // AppointmentCard component - Hidden for directory gateway mode
   const AppointmentCard = ({ appointment }) => (
     <TouchableOpacity
       style={{
@@ -223,7 +231,7 @@ const HomeScreen = ({ navigation }) => {
               color: Colors.white,
               opacity: 0.8,
             }}>
-              Continue your wellness journey
+              Your gateway to holistic wellness services
             </Text>
           </View>
           
@@ -263,8 +271,8 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Upcoming Appointments */}
-        {staticData.upcomingAppointments.length > 0 && (
+        {/* Upcoming Appointments - Hidden for directory gateway mode */}
+        {false && staticData.upcomingAppointments.length > 0 && (
           <View style={{ marginBottom: 24 }}>
             <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
               <Text style={{
@@ -366,13 +374,13 @@ const HomeScreen = ({ navigation }) => {
               color: Colors.textPrimary,
               marginBottom: 4,
             }}>
-              Our Services
+              Service Directory
             </Text>
             <Text style={{
               ...Typography.textStyles.bodySmall,
               color: Colors.textSecondary,
             }}>
-              Holistic wellness for mind, body & soul
+              Connect with our network of wellness professionals
             </Text>
           </View>
           
@@ -385,7 +393,22 @@ const HomeScreen = ({ navigation }) => {
               <ServiceCard 
                 service={item}
                 variant="small"
-                onPress={() => navigation.navigate('ServiceDetail', { service: item })}
+                onPress={(service, action) => {
+                  if (action === 'website' && service.website) {
+                    // Open website in browser
+                    Linking.openURL(service.website).catch(() => {
+                      Alert.alert('Error', 'Unable to open website. Please check your internet connection.')
+                    })
+                  } else if (action === 'call' && service.phone) {
+                    // Open phone dialer
+                    Linking.openURL(`tel:${service.phone}`).catch(() => {
+                      Alert.alert('Error', 'Unable to make call. Please check your device settings.')
+                    })
+                  } else {
+                    // Navigate to service detail screen
+                    navigation.navigate('ServiceDetail', { service })
+                  }
+                }}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
@@ -477,60 +500,62 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Call to Action */}
-        <View style={{
-          marginHorizontal: 16,
-          backgroundColor: Colors.surface,
-          borderRadius: 20,
-          overflow: 'hidden',
-          shadowColor: Colors.shadow.medium,
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
-          elevation: 5,
-        }}>
-          <LinearGradient
-            colors={[Colors.primary, Colors.primaryLight]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{ padding: 24, alignItems: 'center' }}
-          >
-            <Ionicons name="heart" size={40} color={Colors.white} style={{ marginBottom: 12 }} />
-            <Text style={{
-              ...Typography.textStyles.h5,
-              color: Colors.white,
-              textAlign: 'center',
-              marginBottom: 8,
-            }}>
-              Support Our Mission
-            </Text>
-            <Text style={{
-              ...Typography.textStyles.bodySmall,
-              color: Colors.white,
-              opacity: 0.9,
-              textAlign: 'center',
-              marginBottom: 16,
-            }}>
-              Help us provide mental health resources to underserved communities
-            </Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: Colors.white,
-                paddingHorizontal: 24,
-                paddingVertical: 12,
-                borderRadius: 24,
-              }}
-              onPress={() => navigation.navigate('Donate')}
+        {/* Call to Action - Hidden for directory gateway mode */}
+        {false && (
+          <View style={{
+            marginHorizontal: 16,
+            backgroundColor: Colors.surface,
+            borderRadius: 20,
+            overflow: 'hidden',
+            shadowColor: Colors.shadow.medium,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 12,
+            elevation: 5,
+          }}>
+            <LinearGradient
+              colors={[Colors.primary, Colors.primaryLight]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ padding: 24, alignItems: 'center' }}
             >
+              <Ionicons name="heart" size={40} color={Colors.white} style={{ marginBottom: 12 }} />
               <Text style={{
-                ...Typography.textStyles.button,
-                color: Colors.primary,
+                ...Typography.textStyles.h5,
+                color: Colors.white,
+                textAlign: 'center',
+                marginBottom: 8,
               }}>
-                Donate Now
+                Support Nyezi Foundation
               </Text>
-            </TouchableOpacity>
-          </LinearGradient>
-        </View>
+              <Text style={{
+                ...Typography.textStyles.bodySmall,
+                color: Colors.white,
+                opacity: 0.9,
+                textAlign: 'center',
+                marginBottom: 16,
+              }}>
+                Help us provide educational support to rural communities
+              </Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Colors.white,
+                  paddingHorizontal: 24,
+                  paddingVertical: 12,
+                  borderRadius: 24,
+                }}
+                onPress={() => navigation.navigate('Donate')}
+              >
+                <Text style={{
+                  ...Typography.textStyles.button,
+                  color: Colors.primary,
+                }}>
+                  Donate Now
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        )}
       </ScrollView>
     </View>
   )

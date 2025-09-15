@@ -67,10 +67,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 400,
     alignItems: 'center',
-    shadowColor: Colors.brandDark,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: '0 4px 8px rgba(1, 38, 48, 0.1)',
     elevation: 4,
   },
   title: {

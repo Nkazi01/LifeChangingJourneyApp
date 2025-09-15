@@ -36,7 +36,7 @@ const NetworkStatusBar = () => {
     setVisible(true);
     Animated.spring(translateY, {
       toValue: 0,
-      useNativeDriver: true,
+      useNativeDriver: false,
       tension: 80,
       friction: 9,
     }).start();
@@ -45,7 +45,7 @@ const NetworkStatusBar = () => {
   const hideBar = () => {
     Animated.timing(translateY, {
       toValue: -60,
-      useNativeDriver: true,
+      useNativeDriver: false,
       duration: 300,
     }).start(() => {
       setVisible(false);

@@ -1,31 +1,32 @@
 # Life Changing Journey Mobile App
 
 ## Project Overview
-A comprehensive mobile application for Life Changing Journey - a holistic wellness platform offering mental health services, spiritual growth, financial guidance, and hypnotherapy services based in Durban, KZN.
+A directory gateway mobile application for Life Changing Journey - connecting users to a comprehensive network of holistic wellness services including mental health services, spiritual growth, financial guidance, hypnotherapy, and integrated professional services based in Durban, KZN.
 
 ## Current Status
 ✅ **Completed:**
 - Project structure setup
 - Dependencies installation
-- Authentication system (Supabase)
-- Navigation setup (React Navigation v6)
-- Core screens (Login, Register, Home, Services)
+- Authentication system (Supabase) with demo mode
+- Navigation setup (React Navigation v7)
+- Service directory screens with real website links
+- Directory gateway functionality
 - Styling system (Colors, Typography, Global Styles)
 - Database schema design
+- Static data with real service information
 
 🚧 **In Progress:**
-- Basic UI implementation
-- Core navigation flow
+- Directory gateway optimization
+- Service information updates
 
-⏳ **Next Steps:**
-1. Complete remaining screens implementation
-2. Implement booking system
-3. Add payment integration (Stripe)
-4. Implement resources section
-5. Add push notifications
-6. Integrate social media links
-7. Add multi-language support
-8. Testing and deployment
+⏳ **Version 2.0 Features (Future):**
+1. Booking system implementation
+2. Payment integration (Stripe)
+3. Push notifications
+4. Multi-language support
+5. Advanced user profiles
+6. Service rating and reviews
+7. Enhanced resources section
 
 ## Technology Stack
 - **Frontend**: React Native (Expo)
@@ -93,35 +94,67 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_maps_key
 
 ## Features
 
-### Core Features
-1. **User Authentication** ✅
+### Core Features (Version 1.0)
+1. **Service Directory Gateway** ✅
+   - Psychology services (Vuyani Nyezi)
+   - Spiritual interventions & traditional healing
+   - Financial services (Tshabalala Finance)
+   - Hypnotherapy & life coaching
+   - Integrated services (Tshabalala Omkhulu)
+   - Educational support (Nyezi Foundation)
+
+2. **User Authentication** ✅
    - Registration with email verification
    - Login/logout functionality
    - Password reset
    - Profile management
+   - Demo mode for content browsing
 
-2. **Service Booking System** 🚧
-   - Mental wellness sessions
-   - Spiritual growth consultations
-   - Financial guidance meetings
-   - Hypnotherapy sessions
+3. **Service Information** ✅
+   - Detailed service descriptions
+   - Contact information and website links
+   - Direct calling functionality
+   - Service categories and features
 
-3. **Online Donation Platform** ⏳
+4. **Resource Library** ✅
+   - Articles, videos, audio content
+   - Categorized by service type
+   - Featured content
+   - Static data fallbacks
+
+5. **Contact & Communication** ✅
+   - Contact forms
+   - Direct website navigation
+   - Phone call integration
+   - Support system
+
+### Version 2.0 Features (Future)
+1. **Service Booking System** ⏳
+   - Online appointment scheduling
+   - Calendar integration
+   - Booking management
+
+2. **Online Donation Platform** ⏳
    - Multiple payment methods
    - Anonymous donations option
    - Donation tracking
 
-4. **Resource Library** ⏳
-   - Articles, videos, audio content
-   - Categorized by service type
-   - Featured content
+3. **Advanced Features** ⏳
+   - Push notifications
+   - Multi-language support
+   - Service ratings and reviews
+   - Enhanced user profiles
 
-5. **Contact & Communication** ⏳
-   - Direct messaging
-   - Contact forms
-   - Support system
+### Service Network
+The app serves as a directory gateway to the following services:
 
-### Integration Features (Planned)
+- **[Life Changing Journey](https://lifechangingjourney.co.za)** - Main holistic wellness platform
+- **[Psychologist Durban](https://psychologistdurban.co.za)** - Vuyani Nyezi's psychology practice
+- **[Tshabalala Finance](https://tshabalalafinance.co.za)** - Financial services and loans
+- **[Tshabalala Omkhulu](https://tshabalalaomkhulu.co.za)** - Integrated professional services
+- **[Nyezi Foundation](https://www.nyezivfoundation.co.za/)** - Educational support for rural communities
+
+### Integration Features (Version 2.0)
 - YouTube channel integration
 - Social media links (Facebook, Instagram, LinkedIn)
 - Google Maps integration

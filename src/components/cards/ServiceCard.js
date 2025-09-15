@@ -12,7 +12,7 @@ const ServiceCard = ({
   service, 
   onPress, 
   variant = 'large', 
-  showBookButton = true 
+  showBookButton = false 
 }) => {
   const cardWidth = variant === 'large' ? width - 32 : (width - 48) / 2
 
@@ -47,10 +47,7 @@ const ServiceCard = ({
         backgroundColor: Colors.surface,
         borderRadius: 20,
         overflow: 'hidden',
-        shadowColor: Colors.shadow.medium,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 12,
+        boxShadow: '0 4px 12px rgba(1, 38, 48, 0.1)',
         elevation: 8,
       }}>
         {/* Header with gradient */}
@@ -142,32 +139,13 @@ const ServiceCard = ({
             </View>
           )}
 
-          {/* Price and duration */}
+          {/* Category badge */}
           <View style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: showBookButton ? 16 : 0,
+            marginBottom: 16,
           }}>
-            {service.price && (
-              <View>
-                <Text style={{
-                  ...Typography.textStyles.h4,
-                  color: theme.primary,
-                }}>
-                  R{service.price}
-                </Text>
-                {service.duration && (
-                  <Text style={{
-                    ...Typography.textStyles.caption,
-                    color: Colors.textLight,
-                  }}>
-                    {service.duration} minutes
-                  </Text>
-                )}
-              </View>
-            )}
-
             <View style={{
               backgroundColor: theme.background,
               paddingHorizontal: 12,
@@ -183,33 +161,71 @@ const ServiceCard = ({
             </View>
           </View>
 
-          {/* Book button */}
-          {showBookButton && (
-            <TouchableOpacity
-              style={{
-                backgroundColor: theme.primary,
-                paddingVertical: 14,
-                borderRadius: 12,
-                alignItems: 'center',
-                flexDirection: 'row',
-                justifyContent: 'center',
-              }}
-              onPress={() => onPress(service, 'book')}
-            >
-              <Ionicons 
-                name="calendar-outline" 
-                size={18} 
-                color={Colors.white} 
-                style={{ marginRight: 8 }}
-              />
-              <Text style={{
-                ...Typography.textStyles.button,
-                color: Colors.white,
-              }}>
-                Book Session
-              </Text>
-            </TouchableOpacity>
-          )}
+          {/* Contact buttons */}
+          <View style={{
+            flexDirection: 'row',
+            gap: 12,
+          }}>
+            {service.website && (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: theme.primary,
+                  paddingVertical: 12,
+                  paddingHorizontal: 16,
+                  borderRadius: 12,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  flex: 1,
+                }}
+                onPress={() => onPress(service, 'website')}
+              >
+                <Ionicons 
+                  name="paper-plane-outline" 
+                  size={16} 
+                  color={Colors.white} 
+                  style={{ marginRight: 6 }}
+                />
+                <Text style={{
+                  ...Typography.textStyles.button,
+                  color: Colors.white,
+                  fontSize: 14,
+                }}>
+                  Visit
+                </Text>
+              </TouchableOpacity>
+            )}
+            
+            {service.phone && (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Colors.success,
+                  paddingVertical: 12,
+                  paddingHorizontal: 16,
+                  borderRadius: 12,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  flex: 1,
+                }}
+                onPress={() => onPress(service, 'call')}
+              >
+                <Ionicons 
+                  name="call-outline" 
+                  size={16} 
+                  color={Colors.white} 
+                  style={{ marginRight: 6 }}
+                />
+                <Text style={{
+                  ...Typography.textStyles.button,
+                  color: Colors.white,
+                  fontSize: 14,
+                }}>
+                  Call
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
     </TouchableOpacity>
