@@ -1,6 +1,6 @@
 // Main App Component - Life Changing Journey
 import React from 'react'
-import { StatusBar, LogBox } from 'react-native'
+import { StatusBar, LogBox, Platform } from 'react-native'
 import { AuthProvider } from './src/context/AuthContext'
 import { FontLoader } from './src/providers/FontLoader'
 import { DataProvider } from './src/providers/DataProvider'
@@ -16,6 +16,22 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+  // Override global styles for web to fix scrolling
+  if (Platform.OS === 'web') {
+    const style = document.createElement('style');
+    style.textContent = `
+      html, body {
+        overflow: auto !important;
+        height: 100% !important;
+      }
+      #root {
+        overflow: auto !important;
+        height: 100% !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   return (
     <ErrorBoundary>
       <NetworkProvider>

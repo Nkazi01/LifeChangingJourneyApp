@@ -198,58 +198,6 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <StatusBar style="light" />
       
-      {/* Header with gradient */}
-      <LinearGradient
-        colors={Colors.gradients.primary}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{
-          paddingTop: 50,
-          paddingBottom: 24,
-          paddingHorizontal: 16,
-        }}
-      >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{
-              ...Typography.textStyles.bodySmall,
-              color: Colors.white,
-              opacity: 0.9,
-              marginBottom: 4,
-            }}>
-              {getGreeting()},
-            </Text>
-            <Text style={{
-              ...Typography.textStyles.h3,
-              color: Colors.white,
-              marginBottom: 8,
-            }}>
-              {userProfile?.full_name || user?.email?.split('@')[0] || 'Welcome'}
-            </Text>
-            <Text style={{
-              ...Typography.textStyles.bodySmall,
-              color: Colors.white,
-              opacity: 0.8,
-            }}>
-              Your gateway to holistic wellness services
-            </Text>
-          </View>
-          
-          <TouchableOpacity 
-            onPress={() => navigation.navigate('Profile')}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 22,
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Ionicons name="person-outline" size={22} color={Colors.white} />
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
 
       <ScrollView 
         style={{ flex: 1 }}
@@ -259,193 +207,160 @@ const HomeScreen = ({ navigation }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Quick Actions */}
-        <View style={{ paddingVertical: 20 }}>
-          <FlatList
-            data={staticData.quickActions}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 12 }}
-            renderItem={({ item }) => <QuickActionButton action={item} />}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        </View>
-
-        {/* Upcoming Appointments - Hidden for directory gateway mode */}
-        {false && staticData.upcomingAppointments.length > 0 && (
-          <View style={{ marginBottom: 24 }}>
-            <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
-              <Text style={{
-                ...Typography.textStyles.h4,
-                color: Colors.textPrimary,
-                marginBottom: 4,
-              }}>
-                Upcoming Sessions
-              </Text>
-              <Text style={{
-                ...Typography.textStyles.bodySmall,
-                color: Colors.textSecondary,
-              }}>
-                Your scheduled appointments
-              </Text>
-            </View>
-            
-            {staticData.upcomingAppointments.map((appointment) => (
-              <AppointmentCard key={appointment.id} appointment={appointment} />
+        {/* Featured Services - Main Focus */}
+        <View style={{ marginBottom: 32, paddingTop: 20 }}>
+          <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
+            <Text style={{
+              ...Typography.textStyles.h3,
+              color: Colors.textPrimary,
+              marginBottom: 8,
+              textAlign: 'center',
+            }}>
+              Our Services
+            </Text>
+            <Text style={{
+              ...Typography.textStyles.body,
+              color: Colors.textSecondary,
+              textAlign: 'center',
+            }}>
+              Professional wellness services for your transformation
+            </Text>
+          </View>
+          
+          {/* Services Grid */}
+          <View style={{ paddingHorizontal: 16 }}>
+            {staticData.services.map((service) => (
+              <View key={service.id} style={{ marginBottom: 16 }}>
+                <ServiceCard 
+                  service={service}
+                  variant="large"
+                  onPress={(service, action) => {
+                    if (action === 'website' && service.website) {
+                      Linking.openURL(service.website).catch(() => {
+                        Alert.alert('Error', 'Unable to open website. Please check your internet connection.')
+                      })
+                    } else if (action === 'call' && service.phone) {
+                      Linking.openURL(`tel:${service.phone}`).catch(() => {
+                        Alert.alert('Error', 'Unable to make call. Please check your device settings.')
+                      })
+                    } else {
+                      navigation.navigate('ServiceDetail', { service })
+                    }
+                  }}
+                />
+              </View>
             ))}
           </View>
-        )}
-
-        {/* Inspirational Quote */}
-        <TouchableOpacity
-          style={{
-            marginHorizontal: 16,
-            marginBottom: 24,
-            backgroundColor: Colors.surface,
-            borderRadius: 20,
-            padding: 20,
-            shadowColor: Colors.shadow.medium,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.1,
-            shadowRadius: 12,
-            elevation: 5,
-          }}
-          onPress={rotateQuote}
-          activeOpacity={0.95}
-        >
-          <LinearGradient
-            colors={[Colors.secondaryAlpha, Colors.surface]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderRadius: 20,
-            }}
-          />
-          
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-            <View style={{
-              width: 40,
-              height: 40,
-              borderRadius: 20,
-              backgroundColor: Colors.secondary + '30',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 16,
-            }}>
-              <Ionicons name="bulb-outline" size={20} color={Colors.secondary} />
-            </View>
-            
-            <View style={{ flex: 1 }}>
-              <Text style={{
-                ...Typography.textStyles.captionBold,
-                color: Colors.secondary,
-                marginBottom: 8,
-              }}>
-                DAILY INSPIRATION
-              </Text>
-              <Text style={{
-                ...Typography.textStyles.quote,
-                color: Colors.textPrimary,
-                marginBottom: 8,
-                lineHeight: 24,
-              }}>
-                "{currentQuote.text}"
-              </Text>
-              <Text style={{
-                ...Typography.textStyles.caption,
-                color: Colors.textLight,
-              }}>
-                — {currentQuote.author}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        {/* Featured Services */}
-        <View style={{ marginBottom: 24 }}>
-          <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
-            <Text style={{
-              ...Typography.textStyles.h4,
-              color: Colors.textPrimary,
-              marginBottom: 4,
-            }}>
-              Service Directory
-            </Text>
-            <Text style={{
-              ...Typography.textStyles.bodySmall,
-              color: Colors.textSecondary,
-            }}>
-              Connect with our network of wellness professionals
-            </Text>
-          </View>
-          
-          <FlatList
-            data={staticData.services.slice(0, 2)}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 16 }}
-            renderItem={({ item }) => (
-              <ServiceCard 
-                service={item}
-                variant="small"
-                onPress={(service, action) => {
-                  if (action === 'website' && service.website) {
-                    // Open website in browser
-                    Linking.openURL(service.website).catch(() => {
-                      Alert.alert('Error', 'Unable to open website. Please check your internet connection.')
-                    })
-                  } else if (action === 'call' && service.phone) {
-                    // Open phone dialer
-                    Linking.openURL(`tel:${service.phone}`).catch(() => {
-                      Alert.alert('Error', 'Unable to make call. Please check your device settings.')
-                    })
-                  } else {
-                    // Navigate to service detail screen
-                    navigation.navigate('ServiceDetail', { service })
-                  }
-                }}
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
         </View>
 
-        {/* Testimonials */}
-        <View style={{ marginBottom: 24 }}>
-          <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
+        {/* Quick Contact Section */}
+        <View style={{ marginBottom: 32 }}>
+          <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
             <Text style={{
               ...Typography.textStyles.h4,
               color: Colors.textPrimary,
-              marginBottom: 4,
+              marginBottom: 8,
+              textAlign: 'center',
             }}>
-              Success Stories
+              Get In Touch
             </Text>
             <Text style={{
               ...Typography.textStyles.bodySmall,
               color: Colors.textSecondary,
+              textAlign: 'center',
             }}>
-              Hear from our community
+              Ready to start your wellness journey?
             </Text>
           </View>
           
-          <FlatList
-            data={staticData.testimonials.slice(0, 3)}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 12 }}
-            renderItem={({ item }) => (
-              <TestimonialCard 
-                testimonial={item}
-                onPress={() => {}}
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={{
+              backgroundColor: Colors.surface,
+              borderRadius: 20,
+              padding: 24,
+              shadowColor: Colors.shadow.medium,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 5,
+            }}>
+              <LinearGradient
+                colors={[Colors.primaryAlpha, Colors.surface]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  borderRadius: 20,
+                }}
               />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
+              
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    padding: 16,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: 16,
+                    minWidth: 100,
+                  }}
+                  onPress={() => Linking.openURL('tel:+27310350208')}
+                >
+                  <Ionicons name="call" size={24} color={Colors.primary} />
+                  <Text style={{
+                    ...Typography.textStyles.captionBold,
+                    color: Colors.primary,
+                    marginTop: 8,
+                  }}>
+                    Call Us
+                  </Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    padding: 16,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: 16,
+                    minWidth: 100,
+                  }}
+                  onPress={() => Linking.openURL('https://wa.me/27310350208')}
+                >
+                  <Ionicons name="logo-whatsapp" size={24} color="#25D366" />
+                  <Text style={{
+                    ...Typography.textStyles.captionBold,
+                    color: Colors.primary,
+                    marginTop: 8,
+                  }}>
+                    WhatsApp
+                  </Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    padding: 16,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: 16,
+                    minWidth: 100,
+                  }}
+                  onPress={() => navigation.navigate('Contact')}
+                >
+                  <Ionicons name="mail" size={24} color={Colors.primary} />
+                  <Text style={{
+                    ...Typography.textStyles.captionBold,
+                    color: Colors.primary,
+                    marginTop: 8,
+                  }}>
+                    Email
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
         </View>
 
         {/* Featured Resources */}
@@ -463,13 +378,13 @@ const HomeScreen = ({ navigation }) => {
                 color: Colors.textPrimary,
                 marginBottom: 4,
               }}>
-                Featured Content
+                Resources
               </Text>
               <Text style={{
                 ...Typography.textStyles.bodySmall,
                 color: Colors.textSecondary,
               }}>
-                Wellness resources for you
+                Helpful tools and information
               </Text>
             </View>
             

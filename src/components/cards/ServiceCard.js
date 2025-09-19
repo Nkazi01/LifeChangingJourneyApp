@@ -40,7 +40,7 @@ const ServiceCard = ({
         marginHorizontal: variant === 'large' ? 0 : 4,
         marginBottom: 16,
       }}
-      onPress={onPress}
+      onPress={() => onPress(service, 'detail')}
       activeOpacity={0.95}
     >
       <View style={{

@@ -184,15 +184,19 @@ const ServicesScreen = ({ navigation }) => {
       {/* Services List */}
       <ScrollView 
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ padding: 16, paddingBottom: 100, flexGrow: 1 }}
+        showsVerticalScrollIndicator={true}
+        bounces={true}
+        alwaysBounceVertical={true}
+        nestedScrollEnabled={true}
       >
         {filteredServices.map((service) => (
-          <View key={service.id}>
+          <View key={service.id} style={{ marginBottom: 16 }}>
             <ServiceCard 
               service={service}
               variant="large"
               onPress={(service, action) => {
+                console.log('ServiceCard onPress called with:', { service, action })
                 if (action === 'website' && service.website) {
                   // Open website in browser
                   Linking.openURL(service.website).catch(() => {
@@ -203,8 +207,13 @@ const ServicesScreen = ({ navigation }) => {
                   Linking.openURL(`tel:${service.phone}`).catch(() => {
                     Alert.alert('Error', 'Unable to make call. Please check your device settings.')
                   })
-                } else {
+                } else if (action === 'detail') {
                   // Navigate to service detail screen
+                  console.log('Navigating to ServiceDetail with service:', service)
+                  navigation.navigate('ServiceDetail', { service })
+                } else {
+                  // Default: Navigate to service detail screen
+                  console.log('Default navigation to ServiceDetail with service:', service)
                   navigation.navigate('ServiceDetail', { service })
                 }
               }}
