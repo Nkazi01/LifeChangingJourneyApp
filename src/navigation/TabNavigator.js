@@ -31,8 +31,8 @@ const TabNavigator = () => {
             case 'Booking':
               iconName = focused ? 'calendar' : 'calendar-outline'
               break
-            case 'Resources':
-              iconName = focused ? 'library' : 'library-outline'
+            case 'Connect':
+              iconName = focused ? 'people' : 'people-outline'
               break
             case 'Donate':
               iconName = focused ? 'heart' : 'heart-outline'
@@ -87,10 +87,10 @@ const TabNavigator = () => {
         />
       )}
       <Tab.Screen 
-        name="Resources" 
+        name="Connect" 
         component={ResourcesScreen}
         options={{
-          title: 'Resources',
+          title: 'Connect',
         }}
       />
       {/* Donate tab hidden for directory gateway mode */}

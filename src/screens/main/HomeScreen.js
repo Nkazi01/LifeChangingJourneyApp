@@ -9,7 +9,8 @@ import {
   FlatList,
   RefreshControl,
   Linking,
-  Alert
+  Alert,
+  Image
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
@@ -207,6 +208,46 @@ const HomeScreen = ({ navigation }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+        {/* App Description */}
+        <View style={{ marginBottom: 24, paddingTop: 16 }}>
+          <View style={{
+            backgroundColor: Colors.surface,
+            borderRadius: 20,
+            marginHorizontal: 16,
+            padding: 16,
+            shadowColor: Colors.shadow.medium,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.08,
+            shadowRadius: 10,
+            elevation: 4,
+            borderWidth: 1,
+            borderColor: Colors.lightGray,
+          }}>
+            {/* App Icon */}
+            <View style={{ alignItems: 'center', marginBottom: 8 }}>
+              <Image 
+                source={require('../../../assets/icon.png')}
+                style={{ width: 56, height: 56, borderRadius: 12 }}
+                resizeMode="contain"
+              />
+            </View>
+            <Text style={{
+              ...Typography.textStyles.h5,
+              color: Colors.textPrimary,
+              textAlign: 'center',
+              marginBottom: 6,
+            }}>
+              Welcome to Life Changing Journey
+            </Text>
+            <Text style={{
+              ...Typography.textStyles.bodySmall,
+              color: Colors.textSecondary,
+              textAlign: 'center',
+            }}>
+              Your gateway to psychology, spiritual growth, hypnotherapy, financial guidance, and integrated services — all focused on holistic transformation and community upliftment.
+            </Text>
+          </View>
+        </View>
         {/* Featured Services - Main Focus */}
         <View style={{ marginBottom: 32, paddingTop: 20 }}>
           <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
@@ -363,56 +404,86 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Featured Resources */}
+        {/* Connect Section */}
         <View style={{ marginBottom: 24 }}>
-          <View style={{ 
-            paddingHorizontal: 16, 
-            marginBottom: 16,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <View>
-              <Text style={{
-                ...Typography.textStyles.h4,
-                color: Colors.textPrimary,
-                marginBottom: 4,
-              }}>
-                Resources
-              </Text>
-              <Text style={{
-                ...Typography.textStyles.bodySmall,
-                color: Colors.textSecondary,
-              }}>
-                Helpful tools and information
-              </Text>
-            </View>
-            
-            <TouchableOpacity onPress={() => navigation.navigate('Resources')}>
-              <Text style={{
-                ...Typography.textStyles.bodySmall,
-                color: Colors.primary,
-                fontWeight: Typography.fontWeight.semiBold,
-              }}>
-                View All
-              </Text>
-            </TouchableOpacity>
+          <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
+            <Text style={{
+              ...Typography.textStyles.h4,
+              color: Colors.textPrimary,
+              marginBottom: 6,
+              textAlign: 'center',
+            }}>
+              Connect With Us
+            </Text>
+            <Text style={{
+              ...Typography.textStyles.bodySmall,
+              color: Colors.textSecondary,
+              textAlign: 'center',
+            }}>
+              Follow Life Changing Journey on our social platforms
+            </Text>
           </View>
-          
-          <FlatList
-            data={staticData.resources.filter(r => r.is_featured).slice(0, 3)}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 16 }}
-            renderItem={({ item }) => (
-              <ResourceCard 
-                resource={item}
-                variant="default"
-                onPress={() => navigation.navigate('Resources')}
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
+
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={{
+              backgroundColor: Colors.surface,
+              borderRadius: 20,
+              padding: 16,
+              shadowColor: Colors.shadow.medium,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.08,
+              shadowRadius: 10,
+              elevation: 4,
+              borderWidth: 1,
+              borderColor: Colors.lightGray,
+            }}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                {[
+                  { id: 'facebook', title: 'Facebook', icon: 'logo-facebook', color: '#1877F2', url: 'https://www.facebook.com/LifeChangingJourneySA' },
+                  { id: 'instagram', title: 'Instagram', icon: 'logo-instagram', color: '#E1306C', url: 'https://www.instagram.com/lifechangingjourneyza' },
+                  { id: 'youtube', title: 'YouTube', icon: 'logo-youtube', color: '#FF0000', url: 'https://www.youtube.com/@lifechangingjourney' },
+                  { id: 'tiktok', title: 'TikTok', icon: 'logo-tiktok', color: '#000000', url: 'https://www.tiktok.com/@lifechangingjourney' },
+                  { id: 'website', title: 'Website', icon: 'globe-outline', color: Colors.primary, url: 'https://lifechangingjourney.co.za' },
+                  { id: 'whatsapp', title: 'WhatsApp', icon: 'logo-whatsapp', color: '#25D366', url: 'https://wa.me/27310350208' },
+                ].map(link => (
+                  <TouchableOpacity
+                    key={link.id}
+                    style={{
+                      width: '48%',
+                      backgroundColor: 'rgba(255,255,255,0.95)',
+                      borderRadius: 14,
+                      paddingVertical: 14,
+                      paddingHorizontal: 12,
+                      marginBottom: 12,
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.lightGray,
+                    }}
+                    onPress={() => Linking.openURL(link.url)}
+                    activeOpacity={0.9}
+                  >
+                    <View style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      backgroundColor: link.color + '20',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 8,
+                    }}>
+                      <Ionicons name={link.icon} size={20} color={link.color} />
+                    </View>
+                    <Text style={{
+                      ...Typography.textStyles.captionBold,
+                      color: Colors.textPrimary,
+                    }}>
+                      {link.title}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </View>
         </View>
 
         {/* Call to Action - Hidden for directory gateway mode */}

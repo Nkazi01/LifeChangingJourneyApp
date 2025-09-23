@@ -1,67 +1,88 @@
-// Premium Resources Screen - Life Changing Journey
-import React, { useState } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, FlatList, TextInput } from 'react-native'
+// Connect Screen - Life Changing Journey social links hub (renamed from Resources)
+import React, { useState, useEffect } from 'react'
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Linking, Image } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import ResourceCard from '../../components/cards/ResourceCard'
 import { Colors } from '../../styles/colors'
 import { Typography } from '../../styles/typography'
 import { staticData } from '../../utils/staticData'
+import { fetchYouTubeChannelVideos, fetchYouTubeVideosByHandle } from '../../utils/networkUtils'
 
 const ResourcesScreen = ({ navigation }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeTab, setActiveTab] = useState('social') // 'social' | 'podcasts'
 
-  const categories = [
-    { id: 'all', title: 'All', icon: 'grid-outline' },
-    { id: 'video', title: 'Videos', icon: 'play-circle-outline' },
-    { id: 'audio', title: 'Audio', icon: 'headset-outline' },
-    { id: 'article', title: 'Articles', icon: 'document-text-outline' },
-    { id: 'pdf', title: 'Guides', icon: 'download-outline' },
+  const links = [
+    { id: 'facebook', title: 'Facebook', icon: 'logo-facebook', color: '#1877F2', url: 'https://www.facebook.com/LifeChangingJourneySA' },
+    { id: 'instagram', title: 'Instagram', icon: 'logo-instagram', color: '#E1306C', url: 'https://www.instagram.com/lifechangingjourneyza' },
+    { id: 'youtube', title: 'YouTube', icon: 'logo-youtube', color: '#FF0000', url: 'https://www.youtube.com/@lifechangingjourney' },
+    { id: 'tiktok', title: 'TikTok', icon: 'logo-tiktok', color: '#000000', url: 'https://www.tiktok.com/@lifechangingjourney' },
+    { id: 'website', title: 'Website', icon: 'globe-outline', color: Colors.primary, url: 'https://lifechangingjourney.co.za' },
+    { id: 'whatsapp', title: 'WhatsApp', icon: 'logo-whatsapp', color: '#25D366', url: 'https://wa.me/27310350208' },
   ]
 
-  const filteredResources = staticData.resources.filter(resource => {
-    const matchesCategory = selectedCategory === 'all' || resource.type === selectedCategory
-    const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         resource.category.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesCategory && matchesSearch
-  })
+  const filteredLinks = links.filter(l => l.title.toLowerCase().includes(searchQuery.toLowerCase()))
 
-  const CategoryButton = ({ category, isSelected }) => (
+  // Simple podcast model for display
+  const podcast = {
+    title: 'Life Changing Journey Podcast',
+    host: 'Vuyani Nyezi',
+    subscribers: 425,
+    videos: 38,
+    channelUrl: 'https://www.youtube.com/@lifechangingjourney',
+    latestEpisode: {
+      title: 'Kungenzeka Inkinga Isengqondweni',
+      date: '2025-09-21',
+      summary: 'thola usizo kusanesikhathi. Ukuqonda izinkinga zengqondo... ',
+      videoUrl: 'https://www.youtube.com/@lifechangingjourney/videos'
+    },
+  }
+
+  const [videos, setVideos] = useState([])
+  React.useEffect(() => {
+    // Use provided channel ID for reliability
+    const channelId = 'UC1ZDnejClU8G4J8gNwHoByQ'
+    fetchYouTubeChannelVideos(channelId, 6).then(setVideos)
+  }, [])
+
+  const LinkButton = ({ link }) => (
     <TouchableOpacity
       style={{
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-        borderRadius: 20,
-        backgroundColor: isSelected ? Colors.primary : Colors.surface,
-        marginRight: 8,
+        width: '48%',
+        backgroundColor: Colors.surface,
+        borderRadius: 16,
+        padding: 16,
+        alignItems: 'center',
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: Colors.lightGray,
         shadowColor: Colors.shadow.light,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
+        shadowOpacity: 0.06,
+        shadowRadius: 6,
         elevation: 2,
-        borderWidth: 1,
-        borderColor: isSelected ? Colors.primary : Colors.lightGray,
       }}
-      onPress={() => setSelectedCategory(category.id)}
+      onPress={() => Linking.openURL(link.url)}
       activeOpacity={0.9}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons 
-          name={category.icon} 
-          size={16} 
-          color={isSelected ? Colors.white : Colors.textSecondary} 
-          style={{ marginRight: 6 }}
-        />
+      <View style={{
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: link.color + '20',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+      }}>
+        <Ionicons name={link.icon} size={20} color={link.color} />
+      </View>
         <Text style={{
           ...Typography.textStyles.captionBold,
-          color: isSelected ? Colors.white : Colors.textSecondary,
+        color: Colors.textPrimary,
         }}>
-          {category.title}
+        {link.title}
         </Text>
-      </View>
     </TouchableOpacity>
   )
 
@@ -162,7 +183,7 @@ const ResourcesScreen = ({ navigation }) => {
           color: Colors.white,
           marginBottom: 8,
         }}>
-          Resource Library
+          Connect & Follow
         </Text>
         <Text style={{
           ...Typography.textStyles.bodySmall,
@@ -170,7 +191,7 @@ const ResourcesScreen = ({ navigation }) => {
           opacity: 0.9,
           marginBottom: 16,
         }}>
-          Educational content to support your wellness journey
+          Follow our social media and listen to our podcasts
         </Text>
         
         {/* Search Bar */}
@@ -189,7 +210,7 @@ const ResourcesScreen = ({ navigation }) => {
               color: Colors.white,
               ...Typography.textStyles.bodySmall,
             }}
-            placeholder="Search resources..."
+            placeholder={activeTab === 'social' ? 'Search social platforms...' : 'Search episodes...'}
             placeholderTextColor="rgba(255,255,255,0.7)"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -202,36 +223,75 @@ const ResourcesScreen = ({ navigation }) => {
         </View>
       </LinearGradient>
 
-      {/* Stats */}
+      {/* Tabs */}
+      <View style={{ paddingHorizontal: 16, backgroundColor: Colors.background }}>
       <View style={{
         flexDirection: 'row',
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-      }}>
-        <StatsCard 
-          icon="play-circle" 
-          count="45" 
-          label="Videos" 
-          color={Colors.mentalWellness.primary} 
-        />
-        <StatsCard 
-          icon="headset" 
-          count="32" 
-          label="Audio" 
-          color={Colors.spiritualGrowth.primary} 
-        />
-        <StatsCard 
-          icon="document-text" 
-          count="78" 
-          label="Articles" 
-          color={Colors.financialGuidance.primary} 
-        />
-        <StatsCard 
-          icon="download" 
-          count="24" 
-          label="Guides" 
-          color={Colors.hypnotherapy.primary} 
-        />
+          alignItems: 'center',
+          marginTop: -16,
+          backgroundColor: Colors.surface,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: Colors.lightGray,
+          overflow: 'hidden',
+        }}>
+          <TouchableOpacity
+            onPress={() => setActiveTab('social')}
+            style={{
+              flex: 1,
+              paddingVertical: 12,
+              alignItems: 'center',
+              borderRightWidth: 1,
+              borderRightColor: Colors.lightGray,
+              backgroundColor: activeTab === 'social' ? Colors.primary + '08' : 'transparent',
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="share-social-outline" size={18} color={activeTab === 'social' ? Colors.primary : Colors.textSecondary} />
+              <Text style={{
+                ...Typography.textStyles.bodySmall,
+                color: activeTab === 'social' ? Colors.primary : Colors.textSecondary,
+                fontWeight: activeTab === 'social' ? Typography.fontWeight.semiBold : 'normal',
+                marginLeft: 6,
+              }}>
+                Social Media
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveTab('podcasts')}
+            style={{
+              flex: 1,
+              paddingVertical: 12,
+              alignItems: 'center',
+              backgroundColor: activeTab === 'podcasts' ? Colors.primary + '08' : 'transparent',
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="headset-outline" size={18} color={activeTab === 'podcasts' ? Colors.primary : Colors.textSecondary} />
+              <Text style={{
+                ...Typography.textStyles.bodySmall,
+                color: activeTab === 'podcasts' ? Colors.primary : Colors.textSecondary,
+                fontWeight: activeTab === 'podcasts' ? Typography.fontWeight.semiBold : 'normal',
+                marginLeft: 6,
+              }}>
+                Podcasts
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{ height: 2, backgroundColor: Colors.lightGray, marginTop: 8 }} />
+      </View>
+
+      {/* Intro blurb */}
+      <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+        <Text style={{
+          ...Typography.textStyles.bodySmall,
+          color: Colors.textSecondary,
+          textAlign: 'center',
+        }}>
+          Connect with our community, get updates on services and events, and reach out directly via your preferred platform.
+        </Text>
       </View>
 
       <ScrollView 
@@ -239,40 +299,18 @@ const ResourcesScreen = ({ navigation }) => {
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Featured Resources */}
-        <View style={{ paddingHorizontal: 16 }}>
-          <FeaturedSection />
-        </View>
-
-        {/* Category Filter */}
-        <View style={{ paddingVertical: 16 }}>
-          <FlatList
-            data={categories}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 16 }}
-            renderItem={({ item }) => (
-              <CategoryButton 
-                category={item} 
-                isSelected={selectedCategory === item.id}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-
-        {/* Resources Grid */}
+        {activeTab === 'social' ? (
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={{
             ...Typography.textStyles.h5,
             color: Colors.textPrimary,
             marginBottom: 16,
           }}>
-            {selectedCategory === 'all' ? 'All Resources' : categories.find(c => c.id === selectedCategory)?.title}
+              Social Platforms
             {searchQuery && ` for "${searchQuery}"`}
           </Text>
 
-          {filteredResources.length === 0 ? (
+            {filteredLinks.length === 0 ? (
             <View style={{
               backgroundColor: Colors.surface,
               borderRadius: 16,
@@ -287,14 +325,14 @@ const ResourcesScreen = ({ navigation }) => {
                 marginBottom: 8,
                 textAlign: 'center',
               }}>
-                No resources found
+                  No platforms found
               </Text>
               <Text style={{
                 ...Typography.textStyles.bodySmall,
                 color: Colors.textSecondary,
                 textAlign: 'center',
               }}>
-                Try adjusting your search or category filter
+                  Try searching a different platform name
               </Text>
             </View>
           ) : (
@@ -303,76 +341,240 @@ const ResourcesScreen = ({ navigation }) => {
               flexWrap: 'wrap',
               justifyContent: 'space-between',
             }}>
-              {filteredResources.map((resource) => (
-                <View key={resource.id} style={{ width: '48%', marginBottom: 16 }}>
-                  <ResourceCard 
-                    resource={resource}
-                    variant="compact"
-                    onPress={() => {
-                      // Handle resource access
-                      console.log('Accessing resource:', resource.title)
-                    }}
-                  />
-                </View>
+                {filteredLinks.map((link) => (
+                  <LinkButton key={link.id} link={link} />
               ))}
             </View>
           )}
         </View>
-
-        {/* Premium Content Upgrade */}
-        <View style={{
-          backgroundColor: Colors.surface,
-          borderRadius: 20,
-          overflow: 'hidden',
-          marginHorizontal: 16,
-          marginTop: 32,
-          shadowColor: Colors.shadow.medium,
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
-          elevation: 5,
-        }}>
-          <LinearGradient
-            colors={[Colors.secondary, Colors.secondaryLight]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{ padding: 24, alignItems: 'center' }}
-          >
-            <Ionicons name="star" size={40} color={Colors.white} style={{ marginBottom: 12 }} />
+        ) : (
+          <View style={{ paddingHorizontal: 16 }}>
             <Text style={{
               ...Typography.textStyles.h5,
-              color: Colors.white,
-              textAlign: 'center',
-              marginBottom: 8,
+              color: Colors.textPrimary,
+              marginBottom: 12,
             }}>
-              Unlock Premium Content
+              Our Podcasts
             </Text>
-            <Text style={{
-              ...Typography.textStyles.bodySmall,
-              color: Colors.white,
-              opacity: 0.9,
-              textAlign: 'center',
+
+        <View style={{
+          backgroundColor: Colors.surface,
+              borderRadius: 16,
+              padding: 16,
+              borderWidth: 1,
+              borderColor: Colors.lightGray,
+              shadowColor: Colors.shadow.light,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.06,
+              shadowRadius: 6,
+              elevation: 2,
               marginBottom: 16,
             }}>
-              Access exclusive workshops, masterclasses, and personalized content
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                <Image 
+                  source={require('../../../assets/icon.png')}
+                  style={{ width: 44, height: 44, borderRadius: 22, marginRight: 12 }}
+                  resizeMode="contain"
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={{ ...Typography.textStyles.h6, color: Colors.textPrimary }}>
+                    {podcast.title}
+                  </Text>
+                  <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                    Hosted by {podcast.host}
+                  </Text>
+                </View>
+                <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                  {podcast.videos} episodes
+                </Text>
+              </View>
+
+              <Text style={{ ...Typography.textStyles.bodySmall, color: Colors.textSecondary, marginBottom: 12 }}>
+                Weekly conversations about mental wellness, spiritual growth, and personal transformation
+              </Text>
+
+              <Text style={{ ...Typography.textStyles.caption, color: Colors.textLight, marginBottom: 12 }}>
+                {podcast.subscribers} subscribers • {podcast.videos} videos
+              </Text>
+
+              <TouchableOpacity onPress={() => Linking.openURL(podcast.channelUrl)} activeOpacity={0.9}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={{ ...Typography.textStyles.bodySmall, color: Colors.primary, fontWeight: Typography.fontWeight.semiBold }}>
+                    Listen on YouTube
+                  </Text>
+                  <Ionicons name="arrow-forward" size={16} color={Colors.primary} style={{ marginLeft: 6 }} />
+                </View>
+              </TouchableOpacity>
+
+              {/* Latest episode (from YouTube feed if available) */}
+              <Text style={{ ...Typography.textStyles.h6, color: Colors.textPrimary, marginTop: 16, marginBottom: 8 }}>
+                Latest Episode
+              </Text>
+              {(videos[0]) ? (
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(videos[0].link)}
+                  activeOpacity={0.9}
+                  style={{
+                    backgroundColor: Colors.surfaceSecondary,
+                    borderRadius: 12,
+                    padding: 12,
+                    borderWidth: 1,
+                    borderColor: Colors.lightGray,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={{ width: 110, height: 70, borderRadius: 8, overflow: 'hidden', marginRight: 12 }}>
+                      <Image source={{ uri: videos[0].thumbnail }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                      {typeof videos[0].durationSeconds === 'number' && (
+                        <View style={{ position: 'absolute', right: 6, bottom: 6, backgroundColor: 'rgba(0,0,0,0.7)', borderRadius: 6, paddingHorizontal: 6, paddingVertical: 2 }}>
+                          <Text style={{ ...Typography.textStyles.caption, color: '#fff' }}>
+                            {`${Math.floor(videos[0].durationSeconds/60)}:${String(videos[0].durationSeconds%60).padStart(2,'0')}`}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                        <Ionicons name="play-circle" size={20} color={Colors.primary} />
+                        <Text numberOfLines={2} style={{ ...Typography.textStyles.bodySmall, color: Colors.textPrimary, marginLeft: 8, flex: 1 }}>
+                          {videos[0].title}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                          {new Date(videos[0].published).toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </Text>
+                        {typeof videos[0].views === 'number' && (
+                          <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                            {Intl.NumberFormat('en', { notation: 'compact' }).format(videos[0].views)} views
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(podcast.channelUrl)}
+                  activeOpacity={0.9}
+                  style={{
+                    backgroundColor: Colors.surfaceSecondary,
+                    borderRadius: 12,
+                    padding: 12,
+                    borderWidth: 1,
+                    borderColor: Colors.lightGray,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                    <Ionicons name="play-circle" size={20} color={Colors.primary} />
+                    <Text numberOfLines={1} style={{ ...Typography.textStyles.bodySmall, color: Colors.textPrimary, marginLeft: 8, flex: 1 }}>
+                      Listen on YouTube
+                    </Text>
+                  </View>
+                  <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                    Latest episode will appear here
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* Recent two videos (excluding latest) */}
+            {videos.length > 1 && (
+              <View style={{ marginTop: 8, marginBottom: 16 }}>
+                <Text style={{ ...Typography.textStyles.h6, color: Colors.textPrimary, marginBottom: 8 }}>
+                  Recent Videos
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                  {videos.slice(1, 3).map((v) => (
+                    <TouchableOpacity
+                      key={v.id}
+                      onPress={() => Linking.openURL(v.link)}
+                      style={{ width: '48%', backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.lightGray, marginBottom: 12, overflow: 'hidden' }}
+                      activeOpacity={0.9}
+                    >
+                      <View>
+                        <Image source={{ uri: v.thumbnail }} style={{ width: '100%', height: 100 }} resizeMode="cover" />
+                        {typeof v.durationSeconds === 'number' && (
+                          <View style={{ position: 'absolute', right: 6, bottom: 6, backgroundColor: 'rgba(0,0,0,0.7)', borderRadius: 6, paddingHorizontal: 6, paddingVertical: 2 }}>
+                            <Text style={{ ...Typography.textStyles.caption, color: '#fff' }}>
+                              {`${Math.floor(v.durationSeconds/60)}:${String(v.durationSeconds%60).padStart(2,'0')}`}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                      <View style={{ padding: 8 }}>
+                        <Text numberOfLines={2} style={{ ...Typography.textStyles.captionBold, color: Colors.textPrimary }}>
+                          {v.title}
+                        </Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
+                          <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                            {new Date(v.published).toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          </Text>
+                          {typeof v.views === 'number' && (
+                            <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                              {Intl.NumberFormat('en', { notation: 'compact' }).format(v.views)} views
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* Contact options */}
+        <View style={{
+          flexDirection: 'row',
+          paddingHorizontal: 16,
+          paddingTop: 16,
+          gap: 12,
+          marginBottom: 32,
+        }}>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: Colors.surface,
+              borderRadius: 16,
+              padding: 16,
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: Colors.lightGray,
+            }}
+            onPress={() => Linking.openURL('tel:+27310350208')}
+            activeOpacity={0.95}
+          >
+            <Ionicons name="call-outline" size={24} color={Colors.primary} style={{ marginBottom: 8 }} />
+            <Text style={{
+              ...Typography.textStyles.captionBold,
+              color: Colors.textPrimary,
+            }}>
+              Call Us
             </Text>
+          </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: Colors.white,
-                paddingHorizontal: 32,
-                paddingVertical: 14,
-                borderRadius: 24,
-              }}
-              onPress={() => navigation.navigate('Premium')}
-            >
+              flex: 1,
+              backgroundColor: Colors.surface,
+              borderRadius: 16,
+              padding: 16,
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: Colors.lightGray,
+            }}
+            onPress={() => Linking.openURL('https://wa.me/27310350208')}
+            activeOpacity={0.95}
+          >
+            <Ionicons name="logo-whatsapp" size={24} color={'#25D366'} style={{ marginBottom: 8 }} />
               <Text style={{
-                ...Typography.textStyles.button,
-                color: Colors.secondary,
+              ...Typography.textStyles.captionBold,
+              color: Colors.textPrimary,
               }}>
-                Upgrade Now
+              WhatsApp
               </Text>
             </TouchableOpacity>
-          </LinearGradient>
         </View>
 
         {/* Quick Actions */}

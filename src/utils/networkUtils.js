@@ -152,3 +152,91 @@ export const testUrlConnection = async (url) => {
     return false;
   }
 };
+
+// Fetch latest videos from a YouTube channel via RSS (no API key required)
+// channelId: e.g., 'UC_x5XG1OV2P6uZZ5FSM9Tg'
+export const fetchYouTubeChannelVideos = async (channelId, maxItems = 6) => {
+  try {
+    const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+    const proxied = `https://r.jina.ai/http/${rssUrl.replace('https://', '')}`;
+    const res = await fetch(proxied);
+    const xml = await res.text();
+    const entries = Array.from(xml.matchAll(/<entry>[\s\S]*?<\/entry>/g)).slice(0, maxItems);
+    return entries.map((match) => {
+      const entry = match[0];
+      const get = (regex) => {
+        const m = entry.match(regex);
+        return m ? m[1] : '';
+      };
+      const id = get(/<yt:videoId>(.*?)<\/yt:videoId>/);
+      const title = get(/<title>([\s\S]*?)<\/title>/);
+      const published = get(/<published>(.*?)<\/published>/);
+      const link = get(/<link rel=\"alternate\" href=\"(.*?)\"\/>/);
+      const thumbnail = get(/<media:thumbnail url=\"(.*?)\"/);
+      const durationSecStr = get(/<media:group>[\s\S]*?<yt:duration seconds=\"(\d+)\"\/>/);
+      const viewsStr = get(/<media:group>[\s\S]*?<media:community>[\s\S]*?<media:statistics views=\"(\d+)\"\/>/);
+      const durationSeconds = durationSecStr ? parseInt(durationSecStr, 10) : undefined;
+      const views = viewsStr ? parseInt(viewsStr, 10) : undefined;
+      return { id, title, published, link, thumbnail, durationSeconds, views };
+    });
+  } catch (error) {
+    console.warn('Failed to fetch YouTube RSS:', error);
+    return [];
+  }
+};
+
+// Attempt to fetch via YouTube "user" RSS using a handle or username.
+export const fetchYouTubeVideosByHandle = async (handleOrUser, maxItems = 6) => {
+  const clean = (handleOrUser || '').replace(/^@/, '');
+  try {
+    // Try legacy user feed via proxy to avoid CORS
+    const rssUrl = `https://www.youtube.com/feeds/videos.xml?user=${clean}`;
+    const proxied = `https://r.jina.ai/http/${rssUrl.replace('https://', '')}`;
+    const res = await fetch(proxied);
+    const xml = await res.text();
+    if (xml.includes('<entry>')) {
+      const entries = Array.from(xml.matchAll(/<entry>[\s\S]*?<\/entry>/g)).slice(0, maxItems);
+      return entries.map((match) => {
+        const entry = match[0];
+        const get = (regex) => {
+          const m = entry.match(regex);
+          return m ? m[1] : '';
+        };
+        const id = get(/<yt:videoId>(.*?)<\/yt:videoId>/);
+        const title = get(/<title>([\s\S]*?)<\/title>/);
+        const published = get(/<published>(.*?)<\/published>/);
+        const link = get(/<link rel=\"alternate\" href=\"(.*?)\"\/>/);
+        const thumbnail = get(/<media:thumbnail url=\"(.*?)\"/);
+        const durationSecStr = get(/<media:group>[\s\S]*?<yt:duration seconds=\"(\d+)\"\/>/);
+        const viewsStr = get(/<media:group>[\s\S]*?<media:community>[\s\S]*?<media:statistics views=\"(\d+)\"\/>/);
+        const durationSeconds = durationSecStr ? parseInt(durationSecStr, 10) : undefined;
+        const views = viewsStr ? parseInt(viewsStr, 10) : undefined;
+        return { id, title, published, link, thumbnail, durationSeconds, views };
+      });
+    }
+  } catch (e) {
+    // fallthrough to channelId resolution
+  }
+
+  try {
+    // Try resolving channelId from handle page via a read-only proxy to bypass CORS
+    const tryResolve = async (path) => {
+      const proxyUrl = `https://r.jina.ai/http/https://www.youtube.com/${path}`;
+      const page = await fetch(proxyUrl);
+      const html = await page.text();
+      const idMatch = html.match(/"channelId":"(UC[^"]+)"/);
+      return idMatch ? idMatch[1] : null;
+    };
+    let channelId = await tryResolve(`@${clean}`);
+    if (!channelId) {
+      channelId = await tryResolve(`@${clean}/about`);
+    }
+    if (channelId) {
+      return await fetchYouTubeChannelVideos(channelId, maxItems);
+    }
+  } catch (e) {
+    console.warn('Failed to resolve channel from handle:', e);
+  }
+
+  return [];
+};
