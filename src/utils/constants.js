@@ -21,10 +21,10 @@ export const Constants = {
   
   // Social Media Links
   SOCIAL_MEDIA: {
-    facebook: 'https://facebook.com/lifechangingjourneyapp',
-    instagram: 'https://instagram.com/lifechangingjourneyapp',
+    facebook: 'https://www.facebook.com/share/1B7sqUfweq/',
+    instagram: 'https://www.instagram.com/lifechanging_journey?igsh=ZjF5ZjBoZWU1NXQx',
     linkedin: 'https://linkedin.com/company/lifechangingjourneyapp',
-    youtube: 'https://youtube.com/@lifechangingjourneyapp',
+    youtube: 'https://www.youtube.com/@lifechangingjourney-h4j',
   },
   
   // Service Categories

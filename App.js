@@ -8,6 +8,7 @@ import { NetworkProvider } from './src/utils/networkUtils'
 import ErrorBoundary from './src/components/ErrorBoundary'
 import AppNavigator from './src/navigation/AppNavigator'
 import NetworkStatusBar from './src/components/common/NetworkStatusBar'
+import VideoSplash from './src/components/common/VideoSplash'
 
 // Ignore specific warnings in development
 LogBox.ignoreLogs([
@@ -16,6 +17,8 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+  const [showSplash, setShowSplash] = React.useState(true)
+
   // Override global styles for web to fix scrolling
   if (Platform.OS === 'web') {
     const style = document.createElement('style');
@@ -38,6 +41,16 @@ export default function App() {
         <FontLoader>
           <AuthProvider>
             <DataProvider>
+              {showSplash && (
+                <VideoSplash
+                  // Put your video file into assets/ (e.g., assets/splash.mp4) and update the path below
+                  source={require('./assets/splash.mp4')}
+                  onFinish={() => setShowSplash(false)}
+                  backgroundColor="#000"
+                  minimumMs={1500}
+                  poster={require('./assets/icon.png')}
+                />
+              )}
               <NetworkStatusBar />
               <AppNavigator />
               <StatusBar style="auto" />

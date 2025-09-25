@@ -24,10 +24,10 @@ const ServiceDetailScreen = ({ route }) => {
     
     const imageMap = {
       1: require('../../../assets/images/vuyani-nyezi-psychology.jpeg'),
-      2: require('../../../assets/images/life-changing-journey-spiritual.jpg'),
+      2: require('../../../assets/images/life-changing-journey-spiritual.jpeg'),
       3: require('../../../assets/images/tshabalala-omkhulu-financial.jpeg'),
       4: require('../../../assets/images/life-changing-journey-hypnotherapy.jpg'),
-      5: require('../../../assets/images/life-changing-journey-integrated.jpg'),
+      5: require('../../../assets/images/life-changing-journey-integrated.jpeg'),
       6: require('../../../assets/images/nyezi-vuyani-foundation.jpeg')
     }
     
