@@ -404,7 +404,7 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Connect Section */}
+        {/* Connect Section (compact, links to full Connect screen) */}
         <View style={{ marginBottom: 24 }}>
           <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
             <Text style={{
@@ -437,50 +437,36 @@ const HomeScreen = ({ navigation }) => {
               borderWidth: 1,
               borderColor: Colors.lightGray,
             }}>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                {[
-                  { id: 'facebook', title: 'Facebook', icon: 'logo-facebook', color: '#1877F2', url: 'https://www.facebook.com/LifeChangingJourneySA' },
-                  { id: 'instagram', title: 'Instagram', icon: 'logo-instagram', color: '#E1306C', url: 'https://www.instagram.com/lifechangingjourneyza' },
-                  { id: 'youtube', title: 'YouTube', icon: 'logo-youtube', color: '#FF0000', url: 'https://www.youtube.com/@lifechangingjourney' },
-                  { id: 'tiktok', title: 'TikTok', icon: 'logo-tiktok', color: '#000000', url: 'https://www.tiktok.com/@lifechangingjourney' },
-                  { id: 'website', title: 'Website', icon: 'globe-outline', color: Colors.primary, url: 'https://lifechangingjourney.co.za' },
-                  { id: 'whatsapp', title: 'WhatsApp', icon: 'logo-whatsapp', color: '#25D366', url: 'https://wa.me/27310350208' },
-                ].map(link => (
-                  <TouchableOpacity
-                    key={link.id}
-                    style={{
-                      width: '48%',
-                      backgroundColor: 'rgba(255,255,255,0.95)',
-                      borderRadius: 14,
-                      paddingVertical: 14,
-                      paddingHorizontal: 12,
-                      marginBottom: 12,
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: Colors.lightGray,
-                    }}
-                    onPress={() => Linking.openURL(link.url)}
-                    activeOpacity={0.9}
-                  >
-                    <View style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 20,
-                      backgroundColor: link.color + '20',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginBottom: 8,
-                    }}>
-                      <Ionicons name={link.icon} size={20} color={link.color} />
-                    </View>
-                    <Text style={{
-                      ...Typography.textStyles.captionBold,
-                      color: Colors.textPrimary,
-                    }}>
-                      {link.title}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {[{ icon: 'logo-facebook', color: '#1877F2' }, { icon: 'logo-instagram', color: '#E1306C' }, { icon: 'logo-youtube', color: '#FF0000' }].map((item, idx) => (
+                    <TouchableOpacity
+                      key={idx}
+                      onPress={() => navigation.navigate('Connect')}
+                      activeOpacity={0.9}
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 22,
+                        backgroundColor: item.color + '20',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: 10,
+                        borderWidth: 1,
+                        borderColor: Colors.lightGray,
+                      }}
+                    >
+                      <Ionicons name={item.icon} size={20} color={item.color} />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Connect')}
+                  activeOpacity={0.9}
+                  style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: Colors.primary + '10', borderRadius: 12, borderWidth: 1, borderColor: Colors.primary + '30' }}
+                >
+                  <Text style={{ ...Typography.textStyles.captionBold, color: Colors.primary }}>See all</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

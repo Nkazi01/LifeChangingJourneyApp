@@ -14,9 +14,9 @@ const ResourcesScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('social') // 'social' | 'podcasts'
 
   const links = [
-    { id: 'facebook', title: 'Facebook', icon: 'logo-facebook', color: '#1877F2', url: 'https://www.facebook.com/LifeChangingJourneySA' },
-    { id: 'instagram', title: 'Instagram', icon: 'logo-instagram', color: '#E1306C', url: 'https://www.instagram.com/lifechangingjourneyza' },
-    { id: 'youtube', title: 'YouTube', icon: 'logo-youtube', color: '#FF0000', url: 'https://www.youtube.com/@lifechangingjourney' },
+    { id: 'facebook', title: 'Facebook', icon: 'logo-facebook', color: '#1877F2', url: 'https://www.facebook.com/share/1B7sqUfweq/' },
+    { id: 'instagram', title: 'Instagram', icon: 'logo-instagram', color: '#E1306C', url: 'https://www.instagram.com/lifechanging_journey?igsh=ZjF5ZjBoZWU1NXQx' },
+    { id: 'youtube', title: 'YouTube', icon: 'logo-youtube', color: '#FF0000', url: 'https://www.youtube.com/@lifechangingjourney-h4j' },
     { id: 'tiktok', title: 'TikTok', icon: 'logo-tiktok', color: '#000000', url: 'https://www.tiktok.com/@lifechangingjourney' },
     { id: 'website', title: 'Website', icon: 'globe-outline', color: Colors.primary, url: 'https://lifechangingjourney.co.za' },
     { id: 'whatsapp', title: 'WhatsApp', icon: 'logo-whatsapp', color: '#25D366', url: 'https://wa.me/27310350208' },
@@ -30,20 +30,32 @@ const ResourcesScreen = ({ navigation }) => {
     host: 'Vuyani Nyezi',
     subscribers: 425,
     videos: 38,
-    channelUrl: 'https://www.youtube.com/@lifechangingjourney',
+    channelUrl: 'https://www.youtube.com/@lifechangingjourney-h4j',
     latestEpisode: {
       title: 'Kungenzeka Inkinga Isengqondweni',
       date: '2025-09-21',
       summary: 'thola usizo kusanesikhathi. Ukuqonda izinkinga zengqondo... ',
-      videoUrl: 'https://www.youtube.com/@lifechangingjourney/videos'
+      videoUrl: 'https://www.youtube.com/@lifechangingjourney-h4j/videos'
     },
   }
 
   const [videos, setVideos] = useState([])
   React.useEffect(() => {
-    // Use provided channel ID for reliability
     const channelId = 'UC1ZDnejClU8G4J8gNwHoByQ'
-    fetchYouTubeChannelVideos(channelId, 6).then(setVideos)
+    const handle = '@lifechangingjourney-h4j'
+    let cancelled = false
+    ;(async () => {
+      // Try handle first (more robust if channelId changes)
+      const byHandle = await fetchYouTubeVideosByHandle(handle, 6)
+      if (!cancelled && Array.isArray(byHandle) && byHandle.length) {
+        setVideos(byHandle)
+        return
+      }
+      // Fallback to channel id
+      const byChannel = await fetchYouTubeChannelVideos(channelId, 6)
+      if (!cancelled) setVideos(byChannel)
+    })()
+    return () => { cancelled = true }
   }, [])
 
   const LinkButton = ({ link }) => (
