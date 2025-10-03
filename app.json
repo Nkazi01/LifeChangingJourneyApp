@@ -20,7 +20,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#faf5f0"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.lifechangingjourney.app",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -31,6 +33,11 @@
     },
     "plugins": [
       "expo-asset"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "7ecc4b99-ee2d-4693-817a-2c66784225b1"
+      }
+    }
   }
 }

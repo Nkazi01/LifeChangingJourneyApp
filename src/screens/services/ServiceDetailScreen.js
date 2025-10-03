@@ -13,10 +13,7 @@ const { width, height } = Dimensions.get('window')
 const ServiceDetailScreen = ({ route }) => {
   const { service } = route.params
 
-  // Debug logging
-  console.log('ServiceDetailScreen - Service data:', service)
-  console.log('ServiceDetailScreen - Service ID:', service?.id)
-  console.log('ServiceDetailScreen - Service category:', service?.category)
+  
 
   // Function to get the correct image for each service
   const getServiceImage = (service) => {
@@ -135,9 +132,7 @@ const ServiceDetailScreen = ({ route }) => {
 
   // Get comprehensive business information for each service
   const getBusinessInfo = (service) => {
-    console.log('getBusinessInfo called with service ID:', service?.id)
     if (!service || !service.id) {
-      console.log('No service or service ID found')
       return null
     }
     
@@ -289,7 +284,6 @@ const ServiceDetailScreen = ({ route }) => {
 
   // Get credentials and certifications
   const getCredentials = (service) => {
-    console.log('getCredentials called with service ID:', service?.id)
     if (!service || !service.id) {
       return null
     }
@@ -368,7 +362,6 @@ const ServiceDetailScreen = ({ route }) => {
 
   // Get location and hours information
   const getLocationInfo = (service) => {
-    console.log('getLocationInfo called with service ID:', service?.id)
     if (!service || !service.id) {
       return null
     }
@@ -480,7 +473,6 @@ const ServiceDetailScreen = ({ route }) => {
 
   // Get specializations
   const getSpecializations = (service) => {
-    console.log('getSpecializations called with service ID:', service?.id)
     if (!service || !service.id) {
       return null
     }
@@ -691,13 +683,7 @@ const ServiceDetailScreen = ({ route }) => {
             </Text>
           </View>
 
-          {/* Debug Information */}
-          <View style={styles.businessInfoContainer}>
-            <Text style={styles.sectionTitle}>Debug Information</Text>
-            <Text style={styles.infoValue}>Service ID: {service?.id || 'No ID'}</Text>
-            <Text style={styles.infoValue}>Service Title: {service?.title || 'No Title'}</Text>
-            <Text style={styles.infoValue}>Service Category: {service?.category || 'No Category'}</Text>
-          </View>
+          
 
           {/* Business Information */}
           {getBusinessInfo(service) && (
