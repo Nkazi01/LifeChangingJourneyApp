@@ -158,9 +158,7 @@ export const testUrlConnection = async (url) => {
 export const fetchYouTubeChannelVideos = async (channelId, maxItems = 6) => {
   try {
     const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-    const proxied = `https://r.jina.ai/http/${rssUrl.replace('https://', '')}`;
-    const res = await fetch(proxied);
-    const xml = await res.text();
+    const xml = await fetchViaReader(rssUrl);
     const entries = Array.from(xml.matchAll(/<entry>[\s\S]*?<\/entry>/g)).slice(0, maxItems);
     return entries.map((match) => {
       const entry = match[0];
@@ -180,8 +178,13 @@ export const fetchYouTubeChannelVideos = async (channelId, maxItems = 6) => {
       return { id, title, published, link, thumbnail, durationSeconds, views };
     });
   } catch (error) {
-    console.warn('Failed to fetch YouTube RSS:', error);
-    return [];
+    console.warn('Failed to fetch YouTube RSS, trying Piped fallback:', error?.message || error);
+    try {
+      return await fetchViaPiped(channelId, maxItems);
+    } catch (e) {
+      console.warn('Piped fallback failed:', e?.message || e);
+      return [];
+    }
   }
 };
 
@@ -191,9 +194,7 @@ export const fetchYouTubeVideosByHandle = async (handleOrUser, maxItems = 6) => 
   try {
     // Try legacy user feed via proxy to avoid CORS
     const rssUrl = `https://www.youtube.com/feeds/videos.xml?user=${clean}`;
-    const proxied = `https://r.jina.ai/http/${rssUrl.replace('https://', '')}`;
-    const res = await fetch(proxied);
-    const xml = await res.text();
+    const xml = await fetchViaReader(rssUrl);
     if (xml.includes('<entry>')) {
       const entries = Array.from(xml.matchAll(/<entry>[\s\S]*?<\/entry>/g)).slice(0, maxItems);
       return entries.map((match) => {
@@ -221,9 +222,7 @@ export const fetchYouTubeVideosByHandle = async (handleOrUser, maxItems = 6) => 
   try {
     // Try resolving channelId from handle page via a read-only proxy to bypass CORS
     const tryResolve = async (path) => {
-      const proxyUrl = `https://r.jina.ai/http/https://www.youtube.com/${path}`;
-      const page = await fetch(proxyUrl);
-      const html = await page.text();
+      const html = await fetchViaReader(`https://www.youtube.com/${path}`);
       const idMatch = html.match(/"channelId":"(UC[^"]+)"/);
       return idMatch ? idMatch[1] : null;
     };
@@ -239,4 +238,73 @@ export const fetchYouTubeVideosByHandle = async (handleOrUser, maxItems = 6) => 
   }
 
   return [];
+};
+
+// Internal helper to fetch via r.jina.ai Reader with robust URL normalization and fallbacks
+const fetchViaReader = async (absoluteUrl) => {
+  const build = (u) => `https://r.jina.ai/http/${u}`;
+
+  // Try 1: Use URL as-is (includes https://)
+  let resp = await fetch(build(absoluteUrl));
+  if (resp && resp.ok) {
+    return await resp.text();
+  }
+
+  // Try 2: Downgrade to http:// scheme
+  const httpUrl = absoluteUrl.replace(/^https:\/\//, 'http://');
+  resp = await fetch(build(httpUrl));
+  if (resp && resp.ok) {
+    return await resp.text();
+  }
+
+  // Try 3: No scheme, just host/path
+  const noScheme = absoluteUrl.replace(/^https?:\/\//, '');
+  resp = await fetch(`https://r.jina.ai/http/${noScheme}`);
+  if (resp && resp.ok) {
+    return await resp.text();
+  }
+
+  // If all failed, throw with last status for diagnostics
+  const status = resp ? resp.status : 'no-response';
+  throw new Error(`Reader proxy fetch failed (${status}) for ${absoluteUrl}`);
+};
+
+// Fallback: Use public Piped API instances (YouTube frontend) to fetch channel videos without API key
+const fetchViaPiped = async (channelId, maxItems = 6) => {
+  const instances = [
+    'https://piped.video',
+    'https://pipedapi.kavin.rocks',
+    'https://piped.projectsegfau.lt',
+  ];
+
+  let lastError;
+  for (const base of instances) {
+    try {
+      const url = `${base}/api/channel/${channelId}/videos`;
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        lastError = new Error(`HTTP ${resp.status} from ${base}`);
+        continue;
+      }
+      const data = await resp.json();
+      const items = Array.isArray(data?.relatedStreams) ? data.relatedStreams : Array.isArray(data) ? data : [];
+
+      const mapped = items.slice(0, maxItems).map((v) => {
+        const id = v?.url?.replace(/^.*v=|^\/watch\?v=|^\/watch\//, '') || v?.id || '';
+        const title = v?.title || '';
+        const published = v?.uploaded || v?.uploadedDate || '';
+        const link = v?.url ? `https://www.youtube.com${v.url.startsWith('/') ? v.url : `/watch?v=${id}`}` : (id ? `https://www.youtube.com/watch?v=${id}` : '');
+        const thumbnail = Array.isArray(v?.thumbnails) && v.thumbnails.length ? v.thumbnails[v.thumbnails.length - 1]?.url : v?.thumbnail || '';
+        const durationSeconds = typeof v?.duration === 'number' ? v.duration : (typeof v?.durationSeconds === 'number' ? v.durationSeconds : undefined);
+        const views = typeof v?.views === 'number' ? v.views : undefined;
+        return { id, title, published, link, thumbnail, durationSeconds, views };
+      });
+      if (mapped.length) return mapped;
+    } catch (e) {
+      lastError = e;
+      continue;
+    }
+  }
+
+  throw lastError || new Error('All Piped instances failed');
 };

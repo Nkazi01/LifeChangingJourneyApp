@@ -130,6 +130,7 @@ const VideoSplash = ({ source, onFinish, backgroundColor = '#000', minimumMs = 1
         allowsPictureInPicture={false}
         contentFit={Platform.OS === 'web' ? 'contain' : 'cover'}
         nativeControls={false}
+        poster={poster}
       />
     </Pressable>
   )
@@ -158,5 +159,3 @@ const styles = StyleSheet.create({
 })
 
 export default VideoSplash
-
-

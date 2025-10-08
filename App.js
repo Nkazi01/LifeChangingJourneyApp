@@ -73,6 +73,16 @@ export default function App() {
         <FontLoader onReady={() => setFontsReady(true)}>
           <AuthProvider>
             <DataProvider>
+              {showSplash && (
+                <VideoSplash
+                  // Put your video file into assets/ (e.g., assets/splash.mp4) and update the path below
+                  source={require('./assets/splash.mp4')}
+                  onFinish={() => setShowSplash(false)}
+                  backgroundColor="#000"
+                  minimumMs={1500}
+                  poster={require('./assets/icon.png')}
+                />
+              )}
               <NetworkStatusBar />
               <AppNavigator />
               <StatusBar style="auto" />

@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 5.9.1"
+    "version": ">= 14.0.0"
   },
   "build": {
     "development": {
@@ -17,9 +17,19 @@
       "android": {
         "buildType": "app-bundle"
       }
+    },
+    "huawei": {
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "production"
+      }
+    }
   }
 }
