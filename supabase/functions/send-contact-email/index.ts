@@ -103,9 +103,9 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Life Changing Journey <noreply@lifechangingjourney.co.za>',
+        from: 'Life Changing Journey <onboarding@resend.dev>',
         to: ['info@lifechangingjourney.co.za'],
-        subject: `Contact Form: ${subject}`,
+        subject: `Contact Form: ${subject} - From: ${email}`,
         html: emailContent,
         reply_to: email,
       }),

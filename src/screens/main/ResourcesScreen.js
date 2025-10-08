@@ -123,7 +123,6 @@ const ResourcesScreen = ({ navigation }) => {
                 variant="featured"
                 onPress={() => {
                   // Handle resource access
-                  console.log('Accessing resource:', resource.title)
                 }}
               />
             </View>

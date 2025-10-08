@@ -81,21 +81,45 @@ const VideoSplash = ({ source, onFinish, backgroundColor = '#000', minimumMs = 1
     )
   }
 
-  const player = useVideoPlayer(resolvedSrc || source, {
-    shouldPlay: true,
-    isLooping: false,
-    staysActiveInBackground: false,
-    isMuted: true,
-    volume: 0,
-    onPlaybackStatusUpdate: (status) => {
-      if (status?.isLoaded && status?.positionMillis > 0 && !started) {
-        setStarted(true)
-      }
-      if (status?.didJustFinish) {
-        complete()
-      }
-    },
+  const player = useVideoPlayer(resolvedSrc || source, (player) => {
+    player.play();
+    player.muted = true;
+    player.loop = false;
   })
+
+  React.useEffect(() => {
+    if (!player) return;
+
+    const subscription = player.addListener('playingChange', (event) => {
+      if (event.isPlaying && !started) {
+        setStarted(true);
+      }
+    });
+
+    const statusSubscription = player.addListener('statusChange', (event) => {
+      if (event.status === 'readyToPlay' && event.oldStatus === 'loading') {
+        setStarted(true);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+      statusSubscription.remove();
+    };
+  }, [player, started]);
+
+  // Listen for video end
+  React.useEffect(() => {
+    if (!player) return;
+
+    const interval = setInterval(() => {
+      if (player.currentTime >= player.duration && player.duration > 0) {
+        complete();
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [player, complete]);
 
   return (
     <Pressable onPress={complete} style={({ pressed }) => [styles.container, { backgroundColor, opacity: pressed ? 0.98 : 1 }]}>
@@ -106,7 +130,6 @@ const VideoSplash = ({ source, onFinish, backgroundColor = '#000', minimumMs = 1
         allowsPictureInPicture={false}
         contentFit={Platform.OS === 'web' ? 'contain' : 'cover'}
         nativeControls={false}
-        poster={poster}
       />
     </Pressable>
   )

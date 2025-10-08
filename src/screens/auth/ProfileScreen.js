@@ -33,7 +33,7 @@ const ProfileScreen = ({ navigation }) => {
         })
       }
     } catch (error) {
-      console.log('Error loading profile:', error)
+      // Handle error silently
     }
   }
 

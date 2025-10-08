@@ -7,13 +7,7 @@ const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || 'https://demo.supaba
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbW8iLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0NTQ4ODM2MywiZXhwIjoxOTYxMDY0MzYzfQ.demo'
 
 // Validate configuration
-if (!supabaseUrl || supabaseUrl === 'https://your-project-id.supabase.co' || supabaseUrl === 'your_supabase_url_here') {
-  console.log('📱 Running in demo mode - EXPO_PUBLIC_SUPABASE_URL not configured')
-}
-
-if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnonKey === 'your_supabase_anon_key_here') {
-  console.log('📱 Running in demo mode - EXPO_PUBLIC_SUPABASE_ANON_KEY not configured')
-}
+// Running in demo mode if not configured
 
 // Create Supabase client with error handling
 let supabase = null
@@ -26,9 +20,8 @@ try {
       detectSessionInUrl: false, // Disable for mobile development
     },
   })
-  console.log('✅ Supabase client created')
 } catch (error) {
-  console.log('📱 Creating mock Supabase client for demo mode')
+  // Creating mock Supabase client for demo mode
   
   // Create a mock client for development when Supabase is not configured
   supabase = {
@@ -42,7 +35,7 @@ try {
         return {
           data: {
             subscription: {
-              unsubscribe: () => console.log('Mock auth listener unsubscribed')
+              unsubscribe: () => {}
             }
           }
         }
@@ -67,7 +60,6 @@ export const supabaseHelpers = {
         console.error('Supabase connection error:', error)
         return false
       }
-      console.log('✅ Supabase connected successfully')
       return true
     } catch (err) {
       console.error('❌ Supabase connection failed:', err)

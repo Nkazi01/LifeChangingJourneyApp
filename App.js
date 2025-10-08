@@ -8,7 +8,7 @@ import { NetworkProvider } from './src/utils/networkUtils'
 import ErrorBoundary from './src/components/ErrorBoundary'
 import AppNavigator from './src/navigation/AppNavigator'
 import NetworkStatusBar from './src/components/common/NetworkStatusBar'
-import VideoSplash from './src/components/common/VideoSplash'
+import CustomSplashScreen from './src/components/common/CustomSplashScreen'
 
 // Ignore specific warnings in development
 LogBox.ignoreLogs([
@@ -18,6 +18,7 @@ LogBox.ignoreLogs([
 
 export default function App() {
   const [showSplash, setShowSplash] = React.useState(true)
+  const [fontsReady, setFontsReady] = React.useState(false)
 
   // Override global styles for web to fix scrolling
   if (Platform.OS === 'web') {
@@ -35,22 +36,43 @@ export default function App() {
     document.head.appendChild(style);
   }
 
+  const [splashAnimationComplete, setSplashAnimationComplete] = React.useState(false)
+
+  // Hide splash when BOTH animation finishes AND fonts are loaded
+  const handleSplashComplete = () => {
+    setSplashAnimationComplete(true)
+  }
+
+  React.useEffect(() => {
+    if (splashAnimationComplete && fontsReady) {
+      // Both conditions met, splash can be hidden
+      setShowSplash(false)
+    }
+  }, [splashAnimationComplete, fontsReady])
+
+  // Fallback timeout to ensure splash doesn't stay forever
+  React.useEffect(() => {
+    const fallbackTimeout = setTimeout(() => {
+      setShowSplash(false)
+    }, 8000) // 8 seconds max
+
+    return () => clearTimeout(fallbackTimeout)
+  }, [])
+
   return (
     <ErrorBoundary>
       <NetworkProvider>
-        <FontLoader>
+        {/* Show Custom Splash Screen outside FontLoader to cover font loading time */}
+        {showSplash && (
+          <CustomSplashScreen
+            onFinish={handleSplashComplete}
+            minimumMs={4000}
+          />
+        )}
+        
+        <FontLoader onReady={() => setFontsReady(true)}>
           <AuthProvider>
             <DataProvider>
-              {showSplash && (
-                <VideoSplash
-                  // Put your video file into assets/ (e.g., assets/splash.mp4) and update the path below
-                  source={require('./assets/splash.mp4')}
-                  onFinish={() => setShowSplash(false)}
-                  backgroundColor="#000"
-                  minimumMs={1500}
-                  poster={require('./assets/icon.png')}
-                />
-              )}
               <NetworkStatusBar />
               <AppNavigator />
               <StatusBar style="auto" />

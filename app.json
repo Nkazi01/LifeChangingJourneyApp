@@ -43,11 +43,12 @@
       "enabled": false
     },
     "plugins": [
-      "expo-asset"
+      "expo-asset",
+      "expo-video"
     ],
     "extra": {
       "eas": {
-        "projectId": "your-project-id-here"
+        "projectId": "7ecc4b99-ee2d-4693-817a-2c66784225b1"
       }
     }
   }

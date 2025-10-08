@@ -12,7 +12,7 @@ import {
 // Keep splash screen visible until fonts are loaded
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
-export const FontLoader = ({ children }) => {
+export const FontLoader = ({ children, onReady }) => {
   const [fontsLoaded] = useFonts({
     'Poppins_400': Poppins_400Regular,
     'Poppins_400_Italic': Poppins_400Regular_Italic,
@@ -25,8 +25,12 @@ export const FontLoader = ({ children }) => {
     if (fontsLoaded) {
       // Hide splash screen once fonts are loaded
       SplashScreen.hideAsync();
+      // Notify parent that fonts are ready
+      if (typeof onReady === 'function') {
+        onReady();
+      }
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, onReady]);
 
   if (!fontsLoaded) {
     return null;

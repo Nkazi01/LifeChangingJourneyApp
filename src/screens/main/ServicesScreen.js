@@ -196,7 +196,6 @@ const ServicesScreen = ({ navigation }) => {
               service={service}
               variant="large"
               onPress={(service, action) => {
-                console.log('ServiceCard onPress called with:', { service, action })
                 if (action === 'website' && service.website) {
                   // Open website in browser
                   Linking.openURL(service.website).catch(() => {
@@ -209,11 +208,9 @@ const ServicesScreen = ({ navigation }) => {
                   })
                 } else if (action === 'detail') {
                   // Navigate to service detail screen
-                  console.log('Navigating to ServiceDetail with service:', service)
                   navigation.navigate('ServiceDetail', { service })
                 } else {
                   // Default: Navigate to service detail screen
-                  console.log('Default navigation to ServiceDetail with service:', service)
                   navigation.navigate('ServiceDetail', { service })
                 }
               }}
@@ -264,7 +261,7 @@ const ServicesScreen = ({ navigation }) => {
                 paddingVertical: 14,
                 borderRadius: 24,
               }}
-              onPress={() => navigation.navigate('Booking')}
+              onPress={() => navigation.navigate('Contact')}
             >
               <Text style={{
                 ...Typography.textStyles.button,

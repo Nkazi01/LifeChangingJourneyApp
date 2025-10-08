@@ -16,7 +16,6 @@ try {
       detectSessionInUrl: false, // Disable for development
     },
   })
-  console.log('✅ Supabase client created (demo mode)')
 } catch (error) {
   console.error('❌ Failed to create Supabase client:', error)
   
@@ -44,22 +43,17 @@ export const supabaseHelpers = {
   async testConnection() {
     try {
       if (!supabase) {
-        console.log('📱 Running in demo mode - Supabase not configured')
         return false
       }
       
-      console.log('🔄 Testing Supabase connection...')
       const { data, error } = await supabase.from('test').select('*').limit(1)
       
       if (error && error.code !== 'PGRST116') {
-        console.log('⚠️ Supabase connection test failed (expected in demo mode):', error.message)
         return false
       }
       
-      console.log('✅ Supabase connected successfully')
       return true
     } catch (err) {
-      console.log('📱 Running in offline/demo mode:', err.message)
       return false
     }
   },
@@ -113,7 +107,6 @@ export const supabaseHelpers = {
     try {
       return supabase.auth.onAuthStateChange(callback)
     } catch (err) {
-      console.log('📱 Auth state change listener not available in demo mode')
       return { data: { subscription: { unsubscribe: () => {} } } }
     }
   }

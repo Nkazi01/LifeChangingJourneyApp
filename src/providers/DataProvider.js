@@ -27,7 +27,6 @@ export const DataProvider = ({ children }) => {
   // Load data from Supabase or use static data if offline
   const loadData = async () => {
     // For directory gateway mode, always use static data
-    console.log('Directory gateway mode: using static data');
     setDemoMode(true);
     setIsLoading(false);
     
@@ -45,7 +44,7 @@ export const DataProvider = ({ children }) => {
         setServices(servicesData);
         setDemoMode(false);
       } else {
-        console.log('Using static services data', servicesError);
+        // Using static services data
       }
       
       // Load testimonials
@@ -57,7 +56,7 @@ export const DataProvider = ({ children }) => {
       if (testimonialsData && testimonialsData.length > 0) {
         setTestimonials(testimonialsData);
       } else {
-        console.log('Using static testimonials data', testimonialsError);
+        // Using static testimonials data
       }
       
       // Load resources
@@ -69,7 +68,7 @@ export const DataProvider = ({ children }) => {
       if (resourcesData && resourcesData.length > 0) {
         setResources(resourcesData);
       } else {
-        console.log('Using static resources data', resourcesError);
+        // Using static resources data
       }
       
     } catch (error) {
