@@ -23,7 +23,7 @@ const ServiceDetailScreen = ({ route }) => {
       2: require('../../../assets/images/life-changing-journey-spiritual.jpeg'),
       3: require('../../../assets/images/tshabalala-omkhulu-financial.jpeg'),
       4: require('../../../assets/images/life-changing-journey-hypnotherapy.jpeg'),
-      5: require('../../../assets/images/life-changing-journey-integrated.jpeeg'),
+      5: require('../../../assets/images/life-changing-journey-integrated.jpeg'),
       6: require('../../../assets/images/nyezi-vuyani-foundation.jpeg')
     }
     
