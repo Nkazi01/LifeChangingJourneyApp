@@ -309,6 +309,7 @@ const ResourcesScreen = ({ navigation }) => {
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="always"
       >
         {activeTab === 'social' ? (
         <View style={{ paddingHorizontal: 16 }}>

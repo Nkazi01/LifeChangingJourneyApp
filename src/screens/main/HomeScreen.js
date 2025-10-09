@@ -23,11 +23,13 @@ import LoadingSpinner from '../../components/common/LoadingSpinner'
 import { Colors } from '../../styles/colors'
 import { Typography } from '../../styles/typography'
 import { staticData } from '../../utils/staticData'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const { width } = Dimensions.get('window')
 
 const HomeScreen = ({ navigation }) => {
   const { user, getUserProfile } = useAuth()
+  const insets = useSafeAreaInsets()
   const [userProfile, setUserProfile] = useState(staticData.userProfile)
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
@@ -196,13 +198,13 @@ const HomeScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.background }}>
+    <View style={{ flex: 1, backgroundColor: Colors.background, paddingBottom: Math.max(insets.bottom, 12) }}>
       <StatusBar style="light" />
       
 
       <ScrollView 
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: Math.max(100, insets.bottom + 24) }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

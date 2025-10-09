@@ -3,6 +3,9 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../styles/colors'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import SwipeWrapper from '../components/common/SwipeWrapper'
+import AnimatedScreen from '../components/common/AnimatedScreen'
 
 // Import screens
 import HomeScreen from '../screens/main/HomeScreen'
@@ -13,11 +16,27 @@ import DonationScreen from '../screens/main/DonationScreen'
 
 const Tab = createBottomTabNavigator()
 
+const withSwipeAndAnim = (Component, routeLeft, routeRight, animDir) => (props) => (
+  <SwipeWrapper
+    onSwipeLeft={() => routeLeft && props.navigation.navigate(routeLeft)}
+    onSwipeRight={() => routeRight && props.navigation.navigate(routeRight)}
+    style={{ flex: 1 }}
+  >
+    <AnimatedScreen direction={animDir}>
+      <Component {...props} />
+    </AnimatedScreen>
+  </SwipeWrapper>
+)
+
 const TabNavigator = () => {
+  const insets = useSafeAreaInsets()
+  const bottomPad = Math.max(insets.bottom, 8)
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName
 
@@ -49,58 +68,41 @@ const TabNavigator = () => {
           backgroundColor: Colors.surface,
           borderTopWidth: 1,
           borderTopColor: Colors.lightGray,
-          paddingTop: 5,
-          paddingBottom: 5,
-          height: 60,
-        },
-        headerStyle: {
-          backgroundColor: Colors.primary,
-        },
-        headerTintColor: Colors.white,
-        headerTitleStyle: {
-          fontWeight: 'bold',
+          paddingTop: 6,
+          paddingBottom: bottomPad,
+          height: 56 + bottomPad,
         },
       })}
     >
       <Tab.Screen 
         name="Home" 
-        component={HomeScreen}
-        options={{
-          title: 'Home',
-        }}
+        component={withSwipeAndAnim(HomeScreen, 'Services', null, 'right')}
+        options={{ title: 'Home' }}
       />
       <Tab.Screen 
         name="Services" 
-        component={ServicesScreen}
-        options={{
-          title: 'Services',
-        }}
+        component={withSwipeAndAnim(ServicesScreen, 'Connect', 'Home', 'right')}
+        options={{ title: 'Services' }}
       />
       {/* Booking tab hidden for directory gateway mode */}
       {false && (
         <Tab.Screen 
           name="Booking" 
           component={BookingScreen}
-          options={{
-            title: 'Booking',
-          }}
+          options={{ title: 'Booking' }}
         />
       )}
       <Tab.Screen 
         name="Connect" 
-        component={ResourcesScreen}
-        options={{
-          title: 'Connect',
-        }}
+        component={withSwipeAndAnim(ResourcesScreen, null, 'Services', 'left')}
+        options={{ title: 'Connect' }}
       />
       {/* Donate tab hidden for directory gateway mode */}
       {false && (
         <Tab.Screen 
           name="Donate" 
           component={DonationScreen}
-          options={{
-            title: 'Donate',
-          }}
+          options={{ title: 'Donate' }}
         />
       )}
     </Tab.Navigator>

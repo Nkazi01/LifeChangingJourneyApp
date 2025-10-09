@@ -189,6 +189,7 @@ const ServicesScreen = ({ navigation }) => {
         bounces={true}
         alwaysBounceVertical={true}
         nestedScrollEnabled={true}
+        contentInsetAdjustmentBehavior="always"
       >
         {filteredServices.map((service) => (
           <View key={service.id} style={{ marginBottom: 16 }}>
