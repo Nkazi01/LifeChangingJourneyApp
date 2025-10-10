@@ -40,20 +40,34 @@ const ResourcesScreen = ({ navigation }) => {
   }
 
   const [videos, setVideos] = useState([])
+  const [loadingVideos, setLoadingVideos] = useState(true)
   React.useEffect(() => {
     const channelId = 'UC1ZDnejClU8G4J8gNwHoByQ'
     const handle = '@lifechangingjourney-h4j'
     let cancelled = false
+    setLoadingVideos(true)
     ;(async () => {
-      // Try handle first (more robust if channelId changes)
-      const byHandle = await fetchYouTubeVideosByHandle(handle, 6)
-      if (!cancelled && Array.isArray(byHandle) && byHandle.length) {
-        setVideos(byHandle)
-        return
+      try {
+        // Try handle first (more robust if channelId changes)
+        const byHandle = await fetchYouTubeVideosByHandle(handle, 6)
+        if (!cancelled && Array.isArray(byHandle) && byHandle.length) {
+          setVideos(byHandle)
+          setLoadingVideos(false)
+          return
+        }
+        // Fallback to channel id
+        const byChannel = await fetchYouTubeChannelVideos(channelId, 6)
+        if (!cancelled) {
+          setVideos(byChannel)
+          setLoadingVideos(false)
+        }
+      } catch (error) {
+        // Silently handle error - show fallback UI
+        if (!cancelled) {
+          setVideos([])
+          setLoadingVideos(false)
+        }
       }
-      // Fallback to channel id
-      const byChannel = await fetchYouTubeChannelVideos(channelId, 6)
-      if (!cancelled) setVideos(byChannel)
     })()
     return () => { cancelled = true }
   }, [])
@@ -422,7 +436,22 @@ const ResourcesScreen = ({ navigation }) => {
               <Text style={{ ...Typography.textStyles.h6, color: Colors.textPrimary, marginTop: 16, marginBottom: 8 }}>
                 Latest Episode
               </Text>
-              {(videos[0]) ? (
+              {loadingVideos ? (
+                <View style={{
+                  backgroundColor: Colors.surfaceSecondary,
+                  borderRadius: 12,
+                  padding: 12,
+                  borderWidth: 1,
+                  borderColor: Colors.lightGray,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 90,
+                }}>
+                  <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
+                    Loading latest videos...
+                  </Text>
+                </View>
+              ) : (videos[0]) ? (
                 <TouchableOpacity
                   onPress={() => Linking.openURL(videos[0].link)}
                   activeOpacity={0.9}
@@ -484,7 +513,7 @@ const ResourcesScreen = ({ navigation }) => {
                     </Text>
                   </View>
                   <Text style={{ ...Typography.textStyles.caption, color: Colors.textSecondary }}>
-                    Latest episode will appear here
+                    Tap to view latest episodes on YouTube
                   </Text>
                 </TouchableOpacity>
               )}

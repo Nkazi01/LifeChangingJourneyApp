@@ -155,7 +155,13 @@ export const testUrlConnection = async (url) => {
 
 // Fetch latest videos from a YouTube channel via RSS (no API key required)
 // channelId: e.g., 'UC_x5XG1OV2P6uZZ5FSM9Tg'
+// NOTE: Temporarily disabled due to external service outages (Jina AI, Piped API)
 export const fetchYouTubeChannelVideos = async (channelId, maxItems = 6) => {
+  // External services (Jina AI reader & Piped API) are currently unavailable
+  // Return empty array to show fallback UI without network errors
+  return [];
+  
+  /* Disabled until services are restored:
   try {
     const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
     const xml = await fetchViaReader(rssUrl);
@@ -178,18 +184,25 @@ export const fetchYouTubeChannelVideos = async (channelId, maxItems = 6) => {
       return { id, title, published, link, thumbnail, durationSeconds, views };
     });
   } catch (error) {
-    console.warn('Failed to fetch YouTube RSS, trying Piped fallback:', error?.message || error);
+    // Silently try Piped fallback without flooding console
     try {
       return await fetchViaPiped(channelId, maxItems);
     } catch (e) {
-      console.warn('Piped fallback failed:', e?.message || e);
+      // Return empty array - UI will show fallback message
       return [];
     }
   }
+  */
 };
 
 // Attempt to fetch via YouTube "user" RSS using a handle or username.
+// NOTE: Temporarily disabled due to external service outages (Jina AI, Piped API)
 export const fetchYouTubeVideosByHandle = async (handleOrUser, maxItems = 6) => {
+  // External services (Jina AI reader & Piped API) are currently unavailable
+  // Return empty array to show fallback UI without network errors
+  return [];
+  
+  /* Disabled until services are restored:
   const clean = (handleOrUser || '').replace(/^@/, '');
   try {
     // Try legacy user feed via proxy to avoid CORS
@@ -234,39 +247,45 @@ export const fetchYouTubeVideosByHandle = async (handleOrUser, maxItems = 6) => 
       return await fetchYouTubeChannelVideos(channelId, maxItems);
     }
   } catch (e) {
-    console.warn('Failed to resolve channel from handle:', e);
+    // Silently fail - UI will show fallback
   }
 
   return [];
+  */
 };
 
 // Internal helper to fetch via r.jina.ai Reader with robust URL normalization and fallbacks
 const fetchViaReader = async (absoluteUrl) => {
   const build = (u) => `https://r.jina.ai/http/${u}`;
 
-  // Try 1: Use URL as-is (includes https://)
-  let resp = await fetch(build(absoluteUrl));
-  if (resp && resp.ok) {
-    return await resp.text();
-  }
+  try {
+    // Try 1: Use URL as-is (includes https://)
+    let resp = await fetch(build(absoluteUrl), { timeout: 8000 });
+    if (resp && resp.ok) {
+      return await resp.text();
+    }
 
-  // Try 2: Downgrade to http:// scheme
-  const httpUrl = absoluteUrl.replace(/^https:\/\//, 'http://');
-  resp = await fetch(build(httpUrl));
-  if (resp && resp.ok) {
-    return await resp.text();
-  }
+    // Try 2: Downgrade to http:// scheme
+    const httpUrl = absoluteUrl.replace(/^https:\/\//, 'http://');
+    resp = await fetch(build(httpUrl), { timeout: 8000 });
+    if (resp && resp.ok) {
+      return await resp.text();
+    }
 
-  // Try 3: No scheme, just host/path
-  const noScheme = absoluteUrl.replace(/^https?:\/\//, '');
-  resp = await fetch(`https://r.jina.ai/http/${noScheme}`);
-  if (resp && resp.ok) {
-    return await resp.text();
-  }
+    // Try 3: No scheme, just host/path
+    const noScheme = absoluteUrl.replace(/^https?:\/\//, '');
+    resp = await fetch(`https://r.jina.ai/http/${noScheme}`, { timeout: 8000 });
+    if (resp && resp.ok) {
+      return await resp.text();
+    }
 
-  // If all failed, throw with last status for diagnostics
-  const status = resp ? resp.status : 'no-response';
-  throw new Error(`Reader proxy fetch failed (${status}) for ${absoluteUrl}`);
+    // If all failed, throw with last status for diagnostics
+    const status = resp ? resp.status : 'no-response';
+    throw new Error(`Reader proxy fetch failed (${status}) for ${absoluteUrl}`);
+  } catch (error) {
+    // Silently fail - this is expected when services are down
+    throw new Error(`Reader proxy unavailable: ${error.message}`);
+  }
 };
 
 // Fallback: Use public Piped API instances (YouTube frontend) to fetch channel videos without API key
@@ -281,7 +300,13 @@ const fetchViaPiped = async (channelId, maxItems = 6) => {
   for (const base of instances) {
     try {
       const url = `${base}/api/channel/${channelId}/videos`;
-      const resp = await fetch(url);
+      const resp = await fetch(url, { 
+        timeout: 8000,
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
       if (!resp.ok) {
         lastError = new Error(`HTTP ${resp.status} from ${base}`);
         continue;
@@ -301,10 +326,11 @@ const fetchViaPiped = async (channelId, maxItems = 6) => {
       });
       if (mapped.length) return mapped;
     } catch (e) {
+      // Silently continue to next instance
       lastError = e;
       continue;
     }
   }
 
-  throw lastError || new Error('All Piped instances failed');
+  throw lastError || new Error('All Piped instances unavailable');
 };

@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Life Changing Journey",
-    "slug": "life-changing-journey",
-    "version": "1.0.0",
+    "slug": "lifechangingjourney",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -29,11 +29,16 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "co.za.lifechangingjourney.app",
-      "versionCode": 1,
+      "versionCode": 4,
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
-      ]
+      ],
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 35,
+      "minSdkVersion": 24,
+      "playStoreUrl": "YOUR_PLAY_STORE_URL_HERE",
+      "privacyPolicyUrl": "https://innovative01.github.io/LifeChangingJourneyApp/privacy.html"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -48,8 +53,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "7ecc4b99-ee2d-4693-817a-2c66784225b1"
+        "projectId": "fe795527-0e4a-4c3e-84d5-247b756dfb83"
       }
-    }
+    },
+    "owner": "innovative01"
   }
 }
