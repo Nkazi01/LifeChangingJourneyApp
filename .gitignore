@@ -35,3 +35,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Sensitive credentials
+KEYSTORE_CREDENTIALS.md
+*.keystore
+!android/app/debug.keystore

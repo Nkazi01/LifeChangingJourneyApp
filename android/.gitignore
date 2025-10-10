@@ -14,3 +14,8 @@ local.properties
 
 # Bundle artifacts
 *.jsbundle
+
+# Keystores (security)
+*.keystore
+*.jks
+!debug.keystore

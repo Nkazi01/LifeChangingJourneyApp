@@ -33,12 +33,7 @@
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
-      ],
-      "compileSdkVersion": 35,
-      "targetSdkVersion": 35,
-      "minSdkVersion": 24,
-      "playStoreUrl": "YOUR_PLAY_STORE_URL_HERE",
-      "privacyPolicyUrl": "https://innovative01.github.io/LifeChangingJourneyApp/privacy.html"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -49,7 +44,8 @@
     },
     "plugins": [
       "expo-asset",
-      "expo-video"
+      "expo-video",
+      "expo-font"
     ],
     "extra": {
       "eas": {
